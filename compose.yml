@@ -3,10 +3,10 @@ services:
     build: .
     init: true
     ports:
-      - '${HOST_PORT:-3000}:3000'
+      - '${HOST_PORT:-3039}:3039'
     environment:
       NODE_ENV: production
-      PORT: 3000
+      PORT: 3039
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-}
     restart: unless-stopped
     read_only: true

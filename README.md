@@ -12,7 +12,7 @@ Necesitas **Docker y Docker Compose v2**. Ejecuta los comandos desde la carpeta 
 docker compose up --build -d
 ```
 
-Abre **http://localhost:3000**. No necesitas instalar Node.js para esta opción.
+Abre **http://localhost:3039**. No necesitas instalar Node.js para esta opción.
 
 Comandos útiles:
 
@@ -32,7 +32,7 @@ docker compose down              # Detener y eliminar el contenedor
 
 Para probarlo tú solo, usa una ventana normal y otra privada. Evita duplicar una pestaña abierta: puede copiar la sesión del mismo jugador.
 
-Para jugar desde otro dispositivo de la misma red, abre `http://IP-DEL-SERVIDOR:3000`, sustituyendo `IP-DEL-SERVIDOR` por la IP local del ordenador que ejecuta el juego. El cortafuegos debe permitir conexiones a ese puerto.
+Para jugar desde otro dispositivo de la misma red, abre `http://IP-DEL-SERVIDOR:3039`, sustituyendo `IP-DEL-SERVIDOR` por la IP local del ordenador que ejecuta el juego. El cortafuegos debe permitir conexiones a ese puerto.
 
 ### Reglas
 
@@ -59,7 +59,7 @@ npm ci
 npm run dev
 ```
 
-Abre **http://localhost:5173**. Este comando inicia la interfaz con Vite y el servidor del juego en el puerto `3000`, con recarga automática al modificar el código.
+Abre **http://localhost:5173**. Este comando inicia la interfaz con Vite y el servidor del juego en el puerto `3039`, con recarga automática al modificar el código.
 
 No ejecutes a la vez Docker y el servidor local en el mismo puerto. Para detener el modo de desarrollo, pulsa `Ctrl+C`.
 
@@ -70,7 +70,7 @@ npm run build
 npm start
 ```
 
-En este caso, abre **http://localhost:3000**.
+En este caso, abre **http://localhost:3039**.
 
 ## Configuración
 
@@ -84,11 +84,11 @@ Docker Compose lee `.env` automáticamente. Por ejemplo, para abrir el juego en 
 
 | Variable          | Valor predeterminado    | Para qué sirve                                                      |
 | ----------------- | ----------------------- | ------------------------------------------------------------------- |
-| `HOST_PORT`       | `3000`                  | Puerto del ordenador al usar Docker.                                |
-| `PORT`            | `3000`                  | Puerto del servidor Node.js. Dentro del contenedor siempre es 3000. |
+| `HOST_PORT`       | `3039`                  | Puerto del ordenador al usar Docker.                                |
+| `PORT`            | `3039`                  | Puerto del servidor Node.js. Dentro del contenedor siempre es 3039. |
 | `ALLOWED_ORIGINS` | Vacío                   | Direcciones web autorizadas para conectarse, separadas por comas.   |
 | `NODE_ENV`        | `production` en Docker  | Activa las opciones de producción de las cabeceras de seguridad.    |
-| `E2E_URL`         | `http://127.0.0.1:3000` | Dirección del juego que usarán las pruebas de navegador.            |
+| `E2E_URL`         | `http://127.0.0.1:3039` | Dirección del juego que usarán las pruebas de navegador.            |
 
 Sin `ALLOWED_ORIGINS`, se comprueba que el origen de la conexión coincida con el servidor. Si publicas la web con un dominio, puedes indicar, por ejemplo, `ALLOWED_ORIGINS=https://juego.ejemplo.com`.
 
@@ -98,7 +98,7 @@ Al ejecutar Node.js directamente, `.env` **no se carga automáticamente**: defin
 PORT=8080 npm start
 ```
 
-El modo de desarrollo espera que el servidor use el puerto `3000`. Si lo cambias, ajusta también los destinos de `proxy` en `vite.config.ts`.
+El modo de desarrollo espera que el servidor use el puerto `3039`. Si lo cambias, ajusta también los destinos de `proxy` en `vite.config.ts`.
 
 ## Pruebas y comprobaciones
 
@@ -111,7 +111,7 @@ npm run build        # Comprobar TypeScript y generar la versión de producción
 npm run format:check # Comprobar el formato de los archivos
 ```
 
-Para las pruebas de navegador, deja primero el juego en marcha en el puerto `3000` —con Docker o con `npm start` después de compilar— y ejecuta en otra terminal:
+Para las pruebas de navegador, deja primero el juego en marcha en el puerto `3039` —con Docker o con `npm start` después de compilar— y ejecuta en otra terminal:
 
 ```sh
 npx playwright install chromium
@@ -170,14 +170,14 @@ No necesitas regenerar estos archivos para arrancar el juego normalmente. Consul
 - Las salas y sesiones se guardan en memoria. **Reiniciar el servidor borra las partidas y las sesiones**.
 - Está diseñado para un único proceso de servidor, con un máximo de 200 salas y 2.000 sesiones. Usar varias réplicas requiere adaptar el almacenamiento y la coordinación de las partidas.
 - Para publicarlo en Internet, usa HTTPS y un proxy que conserve la cabecera `Host` y permita conexiones WebSocket. Configura `ALLOWED_ORIGINS` si hace falta. El servidor no usa las cabeceras de IP reenviada; detrás de un proxy, los límites por IP pueden afectar a varios jugadores a la vez.
-- Puedes comprobar que el servidor responde abriendo `/health`, por ejemplo `http://localhost:3000/health`. Debe devolver `{"status":"ok"}`.
+- Puedes comprobar que el servidor responde abriendo `/health`, por ejemplo `http://localhost:3039/health`. Debe devolver `{"status":"ok"}`.
 - La interfaz se adapta a pantallas desde 320 píxeles y permite usar el teclado. Las preguntas de siluetas y banderas requieren reconocimiento visual.
 
 ## Problemas habituales
 
 | Problema                           | Qué revisar                                                                                                    |
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| El puerto 3000 está ocupado        | Detén el otro servicio o cambia `HOST_PORT` en Docker.                                                         |
+| El puerto 3039 está ocupado        | Detén el otro servicio o cambia `HOST_PORT` en Docker.                                                         |
 | Otro dispositivo no puede entrar   | Usa la IP local del servidor, comprueba que ambos estén en la misma red y permite el puerto en el cortafuegos. |
 | Dos pestañas usan el mismo jugador | Abre una ventana privada e introduce otro nombre.                                                              |
 | La web carga, pero no conecta      | Revisa los registros, `ALLOWED_ORIGINS` y el soporte WebSocket del proxy si lo utilizas.                       |

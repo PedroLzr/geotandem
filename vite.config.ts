@@ -6,8 +6,8 @@ export default defineConfig({
   build: { outDir: '../dist/public', emptyOutDir: true },
   server: {
     proxy: {
-      '/socket.io': { target: 'http://localhost:3000', ws: true },
-      '/health': 'http://localhost:3000',
+      '/socket.io': { target: 'http://localhost:3039', ws: true },
+      '/health': 'http://localhost:3039',
     },
   },
 });
