@@ -20,8 +20,10 @@ const guestSchema = z.object({
 });
 const actionSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('create') }),
+  z.object({ type: z.literal('solo') }),
   z.object({ type: z.literal('join'), roomId: z.string().regex(/^[A-F0-9]{6}$/) }),
   z.object({ type: z.literal('leave') }),
+  z.object({ type: z.literal('exit') }),
   z.object({ type: z.literal('start') }),
   z.object({ type: z.literal('rematch') }),
   z.object({
@@ -134,12 +136,22 @@ export function createApp() {
           case 'create':
             engine.create(id);
             break;
+          case 'solo':
+            engine.create(id, 'solo');
+            break;
           case 'join':
             engine.join(id, action.roomId);
             break;
           case 'leave':
             engine.leave(id);
             break;
+          case 'exit':
+            engine.exit(id);
+            active.delete(id);
+            reply({ ok: true });
+            socket.disconnect(true);
+            broadcast();
+            return;
           case 'start':
             engine.start(id);
             break;

@@ -105,6 +105,7 @@ button {
 }
 .brand {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   gap: 0;
   font-weight: 750;
@@ -127,6 +128,7 @@ button {
 }
 .header-actions {
   display: flex;
+  min-width: 0;
   align-items: center;
   gap: 26px;
 }
@@ -142,8 +144,13 @@ button {
 .text-button:hover {
   color: var(--green);
 }
+.leave-room-button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
 .guest-chip {
   display: flex;
+  min-width: 0;
   align-items: center;
   gap: 9px;
   padding: 8px 13px;
@@ -178,6 +185,9 @@ button {
 main {
   flex: 1;
   padding-bottom: 32px;
+}
+.room-content {
+  padding-top: 24px;
 }
 .welcome {
   display: grid;
@@ -271,6 +281,12 @@ main {
     0 8px 0 -3px #d8dfd0;
   position: relative;
 }
+.entry-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
 .entry-icon {
   background: #eef1e6;
   border: 1px solid #e2e7d8;
@@ -279,14 +295,13 @@ main {
   display: grid;
   place-items: center;
   border-radius: 50%;
-  margin: 0 0 20px;
+  flex-shrink: 0;
   color: var(--green);
 }
 .entry-card label {
-  font-size: 11px;
+  font-size: 16px;
   font-weight: 600;
   display: block;
-  margin-bottom: 8px;
 }
 .entry-card input {
   width: 100%;
@@ -397,6 +412,11 @@ main {
 .page-heading h1 {
   font-size: clamp(24px, 3vw, 32px);
   margin-bottom: 0;
+}
+.lobby-actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 12px;
 }
 .lobby-layout {
   display: grid;
@@ -575,12 +595,6 @@ main {
   min-width: 86px;
   font-size: 10px;
   padding: 8px 10px;
-}
-.match-topline {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 25px 0 22px;
 }
 .waiting-room {
   text-align: center;
@@ -980,8 +994,11 @@ main {
   background: #e9eddf;
   border-radius: 1px;
 }
-.progress-dots .filled {
+.progress-dots .correct {
   background: #7e9c6d;
+}
+.progress-dots .incorrect {
+  background: #b94a48;
 }
 .phase-intro {
   min-height: 501px;
@@ -1059,6 +1076,10 @@ main {
 }
 .result-card {
   padding: 24px;
+}
+.result-cards.solo-results {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 380px;
 }
 .result-card.winning {
   border-color: #8ea97a;
@@ -1400,6 +1421,9 @@ dialog p {
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
+  .score-player:only-child {
+    grid-column: 1 / -1;
+  }
   .score-player {
     padding: 12px 15px;
     border: 0;
@@ -1532,9 +1556,13 @@ dialog p {
     display: block;
     padding: 28px 0 22px;
   }
-  .page-heading > .button {
+  .lobby-actions {
     margin-top: 21px;
-    width: 100%;
+    gap: 10px;
+  }
+  .lobby-actions > .button {
+    flex: 1;
+    padding-inline: 12px;
   }
   .panel-heading {
     padding: 18px;
@@ -1573,11 +1601,11 @@ dialog p {
   .guest-chip {
     max-width: 120px;
   }
-  .match-topline {
-    padding: 19px 0 16px;
+  .leave-room-button {
+    width: 36px;
   }
-  .match-topline .text-button {
-    font-size: 10px;
+  .leave-room-button > span {
+    display: none;
   }
   .waiting-room {
     padding: 29px 17px;

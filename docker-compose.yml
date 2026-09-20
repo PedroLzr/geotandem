@@ -1,5 +1,6 @@
 services:
   geotandem:
+    container_name: geotandem
     build: .
     init: true
     ports:

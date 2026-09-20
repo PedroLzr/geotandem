@@ -18,6 +18,48 @@ async function answerOne(page: Page) {
 async function noOverflow(page: Page) {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 }
+test('Play solo starts directly, completes three phases, reconnects and replays without an opponent', async ({
+  page,
+}, testInfo) => {
+  await enter(page, 'Solo explorer');
+  for (const width of [1440, 540, 320]) {
+    await page.setViewportSize({ width, height: 900 });
+    await noOverflow(page);
+    const create = await page
+      .getByRole('button', { name: 'Create Game', exact: true })
+      .boundingBox();
+    const solo = await page.getByRole('button', { name: 'Play solo' }).boundingBox();
+    expect(solo!.x).toBeGreaterThanOrEqual(create!.x + create!.width);
+    expect(solo!.y).toBe(create!.y);
+  }
+  await page.screenshot({ path: testInfo.outputPath('solo-lobby-320.png'), fullPage: true });
+  await page.getByRole('button', { name: 'Play solo' }).click();
+  await expect(page.locator('header').getByRole('button', { name: 'Leave game' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Start expedition' })).toHaveCount(0);
+  await expect(page.locator('.scoreboard h2')).toHaveText('Your progress');
+  await expect(page.locator('.score-player')).toHaveCount(1);
+  await expect(page.locator('.answer')).toHaveCount(6);
+  const firstId = await page.locator('.question-top').getAttribute('data-question-id');
+  await page.reload();
+  await expect(page.locator('.question-top')).toHaveAttribute('data-question-id', firstId!);
+  for (const phase of ['Country Shapes', 'Flags', 'Capitals']) {
+    await expect(page.locator('.phase-track-item.active')).toContainText(phase);
+    for (let i = 0; i < 10; i++) await answerOne(page);
+  }
+  await expect(page.getByRole('heading', { name: 'Your expedition is complete.' })).toBeVisible();
+  await expect(page.locator('.result-card')).toHaveCount(1);
+  await expect(page.getByText('SOLO EXPLORER', { exact: true })).toBeVisible();
+  await expect(page.getByText('DRAW', { exact: true })).toHaveCount(0);
+  await noOverflow(page);
+  await page.screenshot({ path: testInfo.outputPath('solo-results-320.png'), fullPage: true });
+  await page.getByRole('button', { name: 'Play Again', exact: true }).click();
+  await expect(page.locator('.answer')).toHaveCount(6);
+  await expect(page.locator('.question-top')).not.toHaveAttribute('data-question-id', firstId!);
+  await page.locator('header').getByRole('button', { name: 'Leave game' }).click();
+  await expect(page.getByRole('dialog')).toContainText('Your solo game will end.');
+  await page.getByRole('dialog').getByRole('button', { name: 'Leave game' }).click();
+  await expect(page.getByRole('button', { name: 'Play solo' })).toBeVisible();
+});
 test('two independent browsers complete all phases, reconnect, show results and start a fresh rematch', async ({
   browser,
 }) => {
@@ -36,10 +78,12 @@ test('two independent browsers complete all phases, reconnect, show results and 
   await enter(b, 'Sierra Sam');
   await a.screenshot({ path: 'artifacts/lobby-desktop.png', fullPage: true });
   await a.getByRole('button', { name: 'Create Game', exact: true }).click();
+  await expect(a.locator('header').getByRole('button', { name: 'Leave lobby' })).toBeVisible();
   await b.getByRole('button', { name: 'Join game' }).first().click();
   await expect(a.getByRole('button', { name: 'Start expedition' })).toBeEnabled();
   await a.screenshot({ path: 'artifacts/room-desktop.png', fullPage: true });
   await a.getByRole('button', { name: 'Start expedition' }).click();
+  await expect(a.locator('header').getByRole('button', { name: 'Leave game' })).toBeVisible();
   await expect(a.locator('.answer')).toHaveCount(6);
   await expect(b.locator('.answer')).toHaveCount(6);
   expect(await a.locator('.answer').allTextContents()).toEqual(
@@ -88,8 +132,8 @@ test('two independent browsers complete all phases, reconnect, show results and 
   await b.getByRole('button', { name: 'Play Again', exact: true }).click();
   await expect(a.locator('.phase-track-item.active')).toContainText('Country Shapes');
   await expect(a.locator('.answer')).toHaveCount(6);
-  await a.getByRole('button', { name: 'Leave Room', exact: true }).click();
-  await a.getByRole('dialog').getByRole('button', { name: 'Leave Room', exact: true }).click();
+  await a.getByRole('button', { name: 'Leave game', exact: true }).click();
+  await a.getByRole('dialog').getByRole('button', { name: 'Leave game', exact: true }).click();
   await expect(
     a.getByRole('heading', { name: 'Join an open table, or start a journey of your own.' }),
   ).toBeVisible();
@@ -114,4 +158,24 @@ test('welcome fits 320px and keyboard navigation works', async ({ browser }) => 
   ).toBeVisible();
   await noOverflow(page);
   await context.close();
+});
+test('leaving a lobby keeps the guest, while Exit clears the guest and survives reload', async ({
+  page,
+}) => {
+  await enter(page, 'Map Reader');
+  const exit = page.locator('header').getByRole('button', { name: 'Exit', exact: true });
+  await expect(exit).toBeVisible();
+  await page.getByRole('button', { name: 'Create Game', exact: true }).click();
+  await page.locator('header').getByRole('button', { name: 'Leave lobby' }).click();
+  await expect(exit).toBeVisible();
+  await expect(page.locator('.guest-chip')).toContainText('Map Reader');
+  expect(await page.evaluate(() => sessionStorage.getItem('geotandem.guest'))).not.toBeNull();
+  await exit.click();
+  await expect(page.getByLabel('Your explorer name')).toHaveValue('');
+  await expect(page.locator('.guest-chip')).toHaveCount(0);
+  expect(await page.evaluate(() => sessionStorage.getItem('geotandem.guest'))).toBeNull();
+  await page.reload();
+  await expect(page.getByLabel('Your explorer name')).toHaveValue('');
+  await enter(page, 'Fresh explorer');
+  await expect(page.locator('.guest-chip')).toContainText('Fresh explorer');
 });

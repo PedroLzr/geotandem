@@ -1,6 +1,6 @@
 # GeoTandem
 
-GeoTandem es un juego de geografía en tiempo real para **dos personas**. Compite identificando siluetas de países, banderas y capitales.
+GeoTandem es un juego de geografía en tiempo real para **una o dos personas**. Juega en solitario o compite identificando siluetas de países, banderas y capitales.
 
 Se juega desde el navegador, sin cuentas ni base de datos. La interfaz y las preguntas están en inglés. Incluye datos de 80 países y funciona en ordenador y móvil.
 
@@ -30,7 +30,9 @@ docker compose down              # Detener y eliminar el contenedor
 4. Cuando ambos estéis conectados, quien creó la sala pulsa **Start expedition**.
 5. Al terminar, ambos podéis pulsar **Play Again** para jugar una nueva partida.
 
-Para probarlo tú solo, usa una ventana normal y otra privada. Evita duplicar una pestaña abierta: puede copiar la sesión del mismo jugador.
+Para jugar en solitario, pulsa **Play solo**, a la derecha de **Create Game**. La partida empieza directamente con la cuenta atrás de la primera fase, sin esperar a otro jugador. Completa las mismas 30 preguntas, consulta tus resultados y pulsa **Play Again** para empezar otra partida. Las partidas individuales no aparecen en la lista pública de salas.
+
+Para probar el modo de dos jugadores desde un solo ordenador, usa una ventana normal y otra privada. Evita duplicar una pestaña abierta: puede copiar la sesión del mismo jugador.
 
 Para jugar desde otro dispositivo de la misma red, abre `http://IP-DEL-SERVIDOR:3039`, sustituyendo `IP-DEL-SERVIDOR` por la IP local del ordenador que ejecuta el juego. El cortafuegos debe permitir conexiones a ese puerto.
 
@@ -40,9 +42,9 @@ Para jugar desde otro dispositivo de la misma red, abre `http://IP-DEL-SERVIDOR:
 - Cada fase tiene 10 preguntas: **30 preguntas por jugador**.
 - Cada pregunta ofrece seis opciones, una correcta y **10 segundos** para responder.
 - Ambos jugadores reciben las mismas preguntas y opciones, en el mismo orden.
-- Cada jugador avanza a su ritmo. La siguiente fase empieza cuando ambos terminan la anterior, tras una cuenta atrás de tres segundos.
+- Cada jugador avanza a su ritmo. La siguiente fase empieza cuando ambos terminan la anterior, tras una cuenta atrás de tres segundos. En solitario, basta con terminar tus diez preguntas.
 - La respuesta queda fijada al seleccionarla. Si se agota el tiempo, cuenta como fallo y registra 10 segundos de respuesta.
-- Gana quien tenga más aciertos. En caso de empate, gana quien tenga menor tiempo medio de respuesta, calculado sobre todas las preguntas. Si la diferencia es inferior a 10 milisegundos, hay empate.
+- En el modo de dos jugadores, gana quien tenga más aciertos. En caso de empate, gana quien tenga menor tiempo medio de respuesta, calculado sobre todas las preguntas. Si la diferencia es inferior a 10 milisegundos, hay empate. En solitario se muestran tus estadísticas, sin clasificación frente a un rival.
 
 ### Si se pierde la conexión
 

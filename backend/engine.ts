@@ -34,6 +34,7 @@ export interface Player {
 }
 export interface Room {
   id: string;
+  mode: RoomView['mode'];
   hostId: string;
   playerIds: string[];
   state: RoomView['state'];
@@ -104,6 +105,12 @@ export class GameEngine {
     p.disconnectedAt = this.now();
     p.lastSeen = this.now();
   }
+  exit(id: string) {
+    const p = this.player(id);
+    if (p.roomId) throw new Error('Leave your lobby or game before exiting.');
+    this.tokens.delete(p.token);
+    this.players.delete(id);
+  }
   player(id: string): Player {
     const p = this.players.get(id);
     if (!p) throw new Error('Guest session expired. Please reconnect.');
@@ -115,8 +122,9 @@ export class GameEngine {
     if (!r) throw new Error('This room is no longer available.');
     return r;
   }
-  create(id: string) {
+  create(id: string, mode: RoomView['mode'] = 'duel') {
     const p = this.player(id);
+    if (!p.connected) throw new Error('Reconnect before starting a game.');
     if (p.roomId) throw new Error('Leave your current room first.');
     if (this.now() - p.lastCreated < 3000)
       throw new Error('Please wait a moment before creating another room.');
@@ -128,6 +136,7 @@ export class GameEngine {
     } while (this.rooms.has(code));
     this.rooms.set(code, {
       id: code,
+      mode,
       hostId: id,
       playerIds: [id],
       state: 'waiting',
@@ -141,13 +150,20 @@ export class GameEngine {
     p.roomId = code;
     p.lastCreated = this.now();
     this.reset(p);
+    if (mode === 'solo') this.begin(this.roomFor(id));
   }
   join(id: string, roomId: string) {
     const p = this.player(id);
     const r = this.rooms.get(roomId);
     if (p.roomId === roomId) return;
     if (p.roomId) throw new Error('Leave your current room first.');
-    if (!r || r.state !== 'waiting' || r.playerIds.length >= 2 || !this.player(r.hostId).connected)
+    if (
+      !r ||
+      r.mode === 'solo' ||
+      r.state !== 'waiting' ||
+      r.playerIds.length >= 2 ||
+      !this.player(r.hostId).connected
+    )
       throw new Error('This room is no longer available to join.');
     r.playerIds.push(id);
     r.updatedAt = this.now();
@@ -178,8 +194,15 @@ export class GameEngine {
     this.begin(r);
   }
   private begin(r: Room) {
-    if (r.playerIds.length !== 2 || r.playerIds.some((id) => !this.player(id).connected))
-      throw new Error('Both players must be connected to start.');
+    if (
+      r.playerIds.length !== (r.mode === 'solo' ? 1 : 2) ||
+      r.playerIds.some((id) => !this.player(id).connected)
+    )
+      throw new Error(
+        r.mode === 'solo'
+          ? 'Reconnect before starting a game.'
+          : 'Both players must be connected to start.',
+      );
     r.questions = generateQuestions();
     r.phase = 0;
     r.winnerId = null;
@@ -295,7 +318,7 @@ export class GameEngine {
       if (r.playerIds.every((id) => this.player(id).index === 10)) {
         if (r.phase === 2) {
           r.state = 'finished';
-          r.winnerId = winner(r.playerIds.map((id) => this.player(id)));
+          r.winnerId = r.mode === 'solo' ? null : winner(r.playerIds.map((id) => this.player(id)));
           r.updatedAt = now;
         } else {
           r.phase++;
@@ -319,7 +342,7 @@ export class GameEngine {
       serverNow: this.now(),
       me: { id: p.id, name: p.name },
       rooms: [...this.rooms.values()]
-        .filter((r) => r.state !== 'abandoned')
+        .filter((r) => r.mode === 'duel' && r.state !== 'abandoned')
         .map((r) => ({
           id: r.id,
           host: this.player(r.hostId).name,
@@ -338,6 +361,7 @@ export class GameEngine {
       room: r
         ? {
             id: r.id,
+            mode: r.mode,
             hostId: r.hostId,
             state: r.state,
             phase: r.phase,
@@ -350,6 +374,9 @@ export class GameEngine {
                 connected: pp.connected,
                 reconnectUntil: pp.disconnectedAt === null ? null : pp.disconnectedAt + GRACE_MS,
                 progress: Math.min(10, pp.index + (pp.feedback ? 1 : 0)),
+                phaseAnswers: pp.answers
+                  .filter((answer) => answer.phase === r.phase)
+                  .map((answer) => answer.correct),
                 stats: statistics(pp.answers),
                 rematch: pp.rematch,
               };

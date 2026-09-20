@@ -41,6 +41,81 @@ function setup(start = true) {
     },
   };
 }
+test('solo games start immediately, stay private, score all phases and restart with one player', () => {
+  let now = 100_000;
+  const engine = new GameEngine(() => now);
+  const player = engine.connect('Solo explorer');
+  const observer = engine.connect('Observer');
+  const advance = (ms: number) => {
+    now += ms;
+    engine.tick();
+  };
+  engine.create(player.id, 'solo');
+  const room = engine.roomFor(player.id);
+  assert.equal(room.state, 'intro');
+  assert.equal(engine.snapshot(player.id).room!.mode, 'solo');
+  assert.deepEqual(room.playerIds, [player.id]);
+  assert.deepEqual(engine.snapshot(observer.id).rooms, []);
+  assert.throws(() => engine.join(observer.id, room.id), /no longer available/);
+  assert.throws(() => engine.create(player.id, 'solo'), /Leave your current room/);
+  const oldQuestion = room.questions[0][0].id;
+  for (let phase = 0; phase < 3; phase++) {
+    advance(INTRO_MS);
+    assert.equal(room.state, 'playing');
+    assert.equal(room.phase, phase);
+    for (let index = 0; index < 10; index++) {
+      const question = room.questions[phase][index];
+      if (index === 9) {
+        advance(QUESTION_MS);
+      } else {
+        advance(100);
+        engine.answer(
+          player.id,
+          question.id,
+          index % 2 === 0
+            ? question.correctOptionId
+            : question.options.find((o) => o.id !== question.correctOptionId)!.id,
+        );
+      }
+      if (phase === 0 && index === 0) {
+        const before = engine.snapshot(player.id).room;
+        engine.disconnect(player.id);
+        assert.equal(engine.connect(player.name, player.token).id, player.id);
+        assert.deepEqual(engine.snapshot(player.id).room, before);
+      }
+      advance(FEEDBACK_MS);
+    }
+    assert.equal(room.state, phase === 2 ? 'finished' : 'intro');
+  }
+  const stats = engine.snapshot(player.id).room!.players[0].stats;
+  assert.equal(stats.total, 30);
+  assert.equal(stats.correct, 15);
+  assert.equal(stats.incorrect, 15);
+  assert.equal(stats.timeouts, 3);
+  assert.deepEqual(stats.phases, [5, 5, 5]);
+  assert.equal(room.winnerId, null);
+  assert.deepEqual(engine.snapshot(observer.id).rooms, []);
+  engine.rematch(player.id);
+  assert.equal(room.state, 'intro');
+  assert.equal(room.phase, 0);
+  assert.notEqual(room.questions[0][0].id, oldQuestion);
+  assert.equal(player.answers.length, 0);
+  engine.leave(player.id);
+  assert.equal(engine.snapshot(player.id).room, null);
+  assert.equal(engine.rooms.has(room.id), false);
+});
+test('a disconnected solo game is cleaned up after the reconnection grace period', () => {
+  let now = 100_000;
+  const engine = new GameEngine(() => now);
+  const player = engine.connect('Solo explorer');
+  engine.create(player.id, 'solo');
+  const roomId = player.roomId!;
+  engine.disconnect(player.id);
+  now += GRACE_MS;
+  engine.tick();
+  assert.equal(engine.rooms.has(roomId), false);
+  assert.equal(player.roomId, null);
+});
 test('question sets have three phases, ten distinct countries, six unique options and exactly one correct answer', () => {
   for (let attempt = 0; attempt < 15; attempt++) {
     const phases = generateQuestions();
@@ -87,6 +162,11 @@ test('correct, incorrect, and timeout stats use server response times', () => {
   assert.equal(a.answers[1].responseMs, 10000);
   assert.equal(statistics(a.answers).averageMs, 5625);
   assert.equal(engine.snapshot(a.id).room!.feedback!.timeout, true);
+  for (const viewer of [a, b]) {
+    const players = engine.snapshot(viewer.id).room!.players;
+    assert.deepEqual(players[0].phaseAnswers, [true, false]);
+    assert.deepEqual(players[1].phaseAnswers, [false, false]);
+  }
 });
 test('answers lock, duplicate and invalid answers are rejected without changing scores', () => {
   const { engine, a, room, answer } = setup();
@@ -138,6 +218,7 @@ test('players progress independently and phase barrier opens exactly once when b
   }
   assert.equal(room.state, 'intro');
   assert.equal(room.phase, 1);
+  assert.ok(engine.snapshot(a.id).room!.players.every((p) => p.phaseAnswers.length === 0));
   const deadline = room.introEndsAt;
   engine.tick();
   engine.tick();
@@ -171,6 +252,10 @@ test('all 30 answers finish a match with correct results, and mutual rematch cre
   assert.equal(statistics(b.answers).accuracy, 50);
   assert.equal(statistics(a.answers).averageMs, 100);
   assert.equal(statistics(b.answers).averageMs, 200);
+  assert.deepEqual(
+    engine.snapshot(a.id).room!.players[1].phaseAnswers,
+    Array.from({ length: 10 }, (_, i) => i % 2 === 0),
+  );
   engine.rematch(a.id);
   assert.equal(room.state, 'finished');
   engine.rematch(a.id);
@@ -179,6 +264,7 @@ test('all 30 answers finish a match with correct results, and mutual rematch cre
   assert.equal(room.state, 'intro');
   assert.notEqual(room.questions[0][0].id, oldId);
   assert.equal(a.answers.length, 0);
+  assert.ok(engine.snapshot(a.id).room!.players.every((p) => p.phaseAnswers.length === 0));
 });
 test('ranking prioritizes accuracy, then speed, and near-identical averages draw', () => {
   const answers = (correct: boolean, responseMs: number): Answer[] => [

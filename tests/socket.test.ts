@@ -109,7 +109,22 @@ test('real sockets validate guests, broadcast rooms, reject a third player, conc
     assert.equal(state.me.id, sa.me.id);
     assert.equal(state.room!.id, roomId);
     assert.equal(state.room!.players[0].stats.total, 1);
+    assert.equal((await action(refreshed, { type: 'exit' })).ok, false);
+    assert.ok(server.engine.players.has(state.me.id));
     await action(refreshed, { type: 'leave' });
+    const oldToken = token;
+    const disconnected = new Promise<void>((resolve) =>
+      refreshed.once('disconnect', () => resolve()),
+    );
+    assert.deepEqual(await action(refreshed, { type: 'exit' }), { ok: true });
+    await disconnected;
+    assert.equal(server.engine.players.has(state.me.id), false);
+    const newGuest = connect('Alex', oldToken);
+    const freshSession = until(newGuest, () => true);
+    newGuest.connect();
+    const fresh = await freshSession;
+    assert.notEqual(fresh.me.id, state.me.id);
+    assert.equal(fresh.room, null);
   } finally {
     for (const s of sockets) s.disconnect();
     await server.close();

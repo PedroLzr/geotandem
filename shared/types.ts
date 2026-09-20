@@ -43,6 +43,7 @@ export interface PlayerView {
   connected: boolean;
   reconnectUntil: number | null;
   progress: number;
+  phaseAnswers: boolean[];
   stats: Statistics;
   rematch: boolean;
 }
@@ -55,6 +56,7 @@ export interface RoomSummary {
 }
 export interface RoomView {
   id: string;
+  mode: 'duel' | 'solo';
   hostId: string;
   state: 'waiting' | 'intro' | 'playing' | 'finished' | 'abandoned';
   phase: number;
@@ -74,8 +76,10 @@ export interface Snapshot {
 }
 export type Action =
   | { type: 'create' }
+  | { type: 'solo' }
   | { type: 'join'; roomId: string }
   | { type: 'leave' }
+  | { type: 'exit' }
   | { type: 'start' }
   | { type: 'answer'; questionId: string; optionId: string }
   | { type: 'rematch' };

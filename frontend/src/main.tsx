@@ -139,11 +139,28 @@ function App() {
               ? response.error
               : 'Unable to process the request.',
         );
+      } else if (action.type === 'exit') {
+        try {
+          sessionStorage.removeItem('geotandem.guest');
+        } catch {
+          /* Storage may be unavailable in private browsing. */
+        }
+        socket.current?.removeAllListeners();
+        socket.current?.disconnect();
+        lockedQuestion.current = null;
+        offset.current = 0;
+        synced.current = false;
+        setConnected(false);
+        setSnapshot(null);
+        setGuest(null);
+        setName('');
+        setLeaveConfirm(false);
       }
     });
   }, []);
   const room = snapshot?.room;
   const me = snapshot?.me;
+  const exitLabel = !room ? 'Exit' : room.state === 'waiting' ? 'Leave lobby' : 'Leave game';
   const feedback = room?.feedback;
   const question = room?.question;
   const timeLeft = question ? Math.max(0, question.deadline - now) : 0;
@@ -171,9 +188,27 @@ function App() {
               <span className="guest-label">GUEST</span>
             </div>
           )}
+          {guest && (
+            <button
+              className="text-button leave-room-button"
+              disabled={busy || !connected}
+              aria-label={exitLabel}
+              title={exitLabel}
+              onClick={() =>
+                !room
+                  ? send({ type: 'exit' })
+                  : room.state === 'playing' || room.state === 'intro'
+                    ? setLeaveConfirm(true)
+                    : leave()
+              }
+            >
+              <LogOut size={16} />
+              <span>{exitLabel}</span>
+            </button>
+          )}
         </div>
       </header>
-      <main id="main-content">
+      <main id="main-content" className={room ? 'room-content' : undefined}>
         {error && (
           <div className="alert" role="alert">
             <span>{error}</span>
@@ -224,8 +259,11 @@ function App() {
             </div>
             <div className="welcome-right">
               <section className="entry-card">
-                <div className="entry-icon">
-                  <Compass size={31} />
+                <div className="entry-heading">
+                  <div className="entry-icon">
+                    <Compass size={31} />
+                  </div>
+                  <label htmlFor="guest-name">Your explorer name</label>
                 </div>
                 <form
                   onSubmit={(e) => {
@@ -240,7 +278,6 @@ function App() {
                     setGuest(valueGuest);
                   }}
                 >
-                  <label htmlFor="guest-name">Your explorer name</label>
                   <input
                     id="guest-name"
                     value={name}
@@ -256,7 +293,7 @@ function App() {
                 </form>
               </section>
               <div className="route-preview">
-                <span className="eyebrow">THREE WAYS TO KNOW THE WORLD</span>
+                <span className="eyebrow">THREE TYPES OF QUESTIONS</span>
                 {PHASES.map((phase, i) => {
                   const Icon = phaseIcons[i];
                   return (
@@ -295,13 +332,22 @@ function App() {
               <div>
                 <h1>Join an open table, or start a journey of your own.</h1>
               </div>
-              <button
-                className="button primary"
-                disabled={busy || !connected}
-                onClick={() => send({ type: 'create' })}
-              >
-                <Plus size={18} /> Create Game
-              </button>
+              <div className="lobby-actions">
+                <button
+                  className="button primary"
+                  disabled={busy || !connected}
+                  onClick={() => send({ type: 'create' })}
+                >
+                  <Plus size={18} /> Create Game
+                </button>
+                <button
+                  className="button secondary"
+                  disabled={busy || !connected}
+                  onClick={() => send({ type: 'solo' })}
+                >
+                  <Compass size={18} /> Play solo
+                </button>
+              </div>
             </div>
             <div className="lobby-layout">
               <section className="panel rooms-panel">
@@ -382,37 +428,21 @@ function App() {
                       <Icon size={21} />
                       <div>
                         <strong>{p}</strong>
-                        <span>10 questions · 10 seconds each</span>
+                        <span>10 questions</span>
                       </div>
                       <span>0{i + 1}</span>
                     </div>
                   );
                 })}
                 <div className="guide-tip">
-                  <Compass size={20} />
-                  <p>Explore at your pace. You’ll meet your rival at the end of each phase.</p>
+                  <Clock3 size={20} />
+                  <p>10 seconds each</p>
                 </div>
               </aside>
             </div>
           </>
         ) : (
           <>
-            <div className="match-topline">
-              <button
-                className="text-button"
-                disabled={busy}
-                onClick={() =>
-                  room.state === 'playing' || room.state === 'intro'
-                    ? setLeaveConfirm(true)
-                    : leave()
-                }
-              >
-                <LogOut size={16} />
-                {room.state === 'finished' || room.state === 'abandoned'
-                  ? 'Back to Lobby'
-                  : 'Leave Room'}
-              </button>
-            </div>
             {room.players.some((p) => p.id !== me?.id && !p.connected) && (
               <div className="connection-banner" role="status">
                 <WifiOff size={18} />
@@ -689,14 +719,18 @@ function App() {
           <X />
         </button>
         <span className="eyebrow">END THIS EXPEDITION?</span>
-        <h2 id="dialog-title">Leave the match?</h2>
-        <p>Your opponent’s match will end too. You can always find a new rival in the lobby.</p>
+        <h2 id="dialog-title">Leave the game?</h2>
+        <p>
+          {room?.mode === 'solo'
+            ? 'Your solo game will end. You can start a new expedition from Game Rooms.'
+            : 'Your opponent’s game will end too. You can always find a new rival in Game Rooms.'}
+        </p>
         <div className="dialog-actions">
           <button className="button secondary" onClick={closeDialog}>
             Keep exploring
           </button>
           <button className="button primary" onClick={leave}>
-            Leave Room
+            Leave game
           </button>
         </div>
       </dialog>
@@ -708,7 +742,7 @@ function Scoreboard({ room, meId }: { room: RoomView; meId: string }) {
     <aside className="scoreboard">
       <section className="panel">
         <div className="panel-heading">
-          <h2>Live standings</h2>
+          <h2>{room.mode === 'solo' ? 'Your progress' : 'Live standings'}</h2>
           <span className="status-dot" />
         </div>
         <div className="score-players">
@@ -722,13 +756,11 @@ function Scoreboard({ room, meId }: { room: RoomView; meId: string }) {
                   <h3>
                     {p.name} {p.id === meId && <small>YOU</small>}
                   </h3>
-                  <span>
-                    {p.connected
-                      ? p.progress === 10
-                        ? 'Phase complete'
-                        : `${p.progress}/10 completed`
-                      : 'Reconnecting…'}
-                  </span>
+                  {!p.connected ? (
+                    <span>Reconnecting…</span>
+                  ) : p.progress === 10 ? (
+                    <span>Phase complete</span>
+                  ) : null}
                 </div>
               </div>
               <div className="score-numbers">
@@ -747,7 +779,18 @@ function Scoreboard({ room, meId }: { room: RoomView; meId: string }) {
               </div>
               <div className="progress-dots" aria-label={`${p.progress} of 10 questions complete`}>
                 {Array.from({ length: 10 }, (_, n) => (
-                  <span key={n} className={n < p.progress ? 'filled' : ''} />
+                  <span
+                    key={n}
+                    className={
+                      p.phaseAnswers[n] === undefined
+                        ? ''
+                        : p.phaseAnswers[n]
+                          ? 'correct'
+                          : 'incorrect'
+                    }
+                    role="img"
+                    aria-label={`Question ${n + 1}: ${p.phaseAnswers[n] === undefined ? 'Pending' : p.phaseAnswers[n] ? 'Correct' : 'Incorrect'}`}
+                  />
                 ))}
               </div>
             </div>
@@ -771,6 +814,7 @@ function Results({
   onLeave: () => void;
 }) {
   const own = room.players.find((p) => p.id === meId)!;
+  const solo = room.mode === 'solo';
   const winner = room.players.find((p) => p.id === room.winnerId);
   return (
     <section className="results">
@@ -779,16 +823,24 @@ function Results({
           <Trophy size={35} />
         </span>
         <p className="eyebrow">GEOTANDEM · MATCH COMPLETE</p>
-        <h1>{winner ? `${winner.name} takes the world.` : 'A world-class draw.'}</h1>
-        <p>
-          {winner?.id === meId
-            ? 'Well explored. That victory has your name on it.'
+        <h1>
+          {solo
+            ? 'Your expedition is complete.'
             : winner
-              ? 'A worthy rival. A world of new discoveries.'
-              : 'Two curious minds, perfectly matched.'}
+              ? `${winner.name} takes the world.`
+              : 'A world-class draw.'}
+        </h1>
+        <p>
+          {solo
+            ? 'Three phases explored. See how well you know the world.'
+            : winner?.id === meId
+              ? 'Well explored. That victory has your name on it.'
+              : winner
+                ? 'A worthy rival. A world of new discoveries.'
+                : 'Two curious minds, perfectly matched.'}
         </p>
       </div>
-      <div className="result-cards">
+      <div className={`result-cards ${solo ? 'solo-results' : ''}`}>
         {room.players.map((p) => (
           <article
             className={`panel result-card ${p.id === room.winnerId ? 'winning' : ''}`}
@@ -797,11 +849,13 @@ function Results({
             <div className="result-card-top">
               <span className="avatar large">{p.name.slice(0, 1).toUpperCase()}</span>
               <span className="result-rank">
-                {room.winnerId === null
-                  ? 'DRAW'
-                  : p.id === room.winnerId
-                    ? '★ WINNER'
-                    : 'RUNNER-UP'}
+                {solo
+                  ? 'SOLO EXPLORER'
+                  : room.winnerId === null
+                    ? 'DRAW'
+                    : p.id === room.winnerId
+                      ? '★ WINNER'
+                      : 'RUNNER-UP'}
               </span>
             </div>
             <h2>
@@ -849,7 +903,7 @@ function Results({
           {own.rematch ? 'Waiting for opponent…' : 'Play Again'}
         </button>
         <button className="button secondary" disabled={busy} onClick={onLeave}>
-          Back to Lobby <ArrowRight size={17} />
+          Back to Game Rooms <ArrowRight size={17} />
         </button>
       </div>
       {room.players.some((p) => p.rematch && p.id !== meId) && (
