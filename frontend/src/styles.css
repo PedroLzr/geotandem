@@ -653,14 +653,6 @@ main {
 .start-button {
   min-width: 250px;
 }
-.waiting-facts {
-  margin-top: 25px;
-  color: var(--muted);
-  font-size: 10px;
-}
-.waiting-facts span {
-  padding: 0 9px;
-}
 .waiting-note {
   display: flex;
   align-items: center;
@@ -701,11 +693,23 @@ main {
   color: #63725b;
 }
 .phase-track-item.active {
-  background: #e4ecdb;
-  color: var(--green);
+  background: #cbdff7;
+  color: #204f85;
 }
 .phase-track-item.complete {
   color: #5c7854;
+}
+.phase-track-item.phase-won {
+  background: #e4f0de;
+  color: #23572a;
+}
+.phase-track-item.phase-lost {
+  background: #f8e3e3;
+  color: #913b3b;
+}
+.phase-track-item.phase-draw {
+  background: #e2edf9;
+  color: #2b5684;
 }
 .phase-track-icon {
   display: grid;
@@ -717,8 +721,8 @@ main {
   background: #f8faf1;
 }
 .phase-track-item.active .phase-track-icon {
-  background: var(--green);
-  border-color: var(--green);
+  background: #285e9c;
+  border-color: #285e9c;
   color: #fff;
 }
 .phase-track-item > div {
@@ -846,7 +850,7 @@ main {
   gap: 12px;
   line-height: 1.3;
 }
-.answer:hover:not(:disabled) {
+.answer.pointer-hovered:hover:not(:disabled) {
   background: #edf3e5;
   border-color: #6c8f5c;
 }
@@ -1639,12 +1643,6 @@ dialog p {
   .start-button {
     width: 100%;
     min-width: 0;
-  }
-  .waiting-facts {
-    font-size: 8px;
-  }
-  .waiting-facts span {
-    padding: 0 5px;
   }
   .phase-track-item {
     padding: 9px 8px;

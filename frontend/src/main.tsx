@@ -13,6 +13,7 @@ import {
   LogOut,
   Map,
   MapPin,
+  Minus,
   Plus,
   RotateCcw,
   Trophy,
@@ -52,6 +53,7 @@ function App() {
   const [connected, setConnected] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [hoveredAnswerId, setHoveredAnswerId] = useState<string | null>(null);
   const [leaveConfirm, setLeaveConfirm] = useState(false);
   const [now, setNow] = useState(Date.now());
   const socket = useRef<Socket | null>(null);
@@ -163,6 +165,8 @@ function App() {
   const exitLabel = !room ? 'Exit' : room.state === 'waiting' ? 'Leave lobby' : 'Leave game';
   const feedback = room?.feedback;
   const question = room?.question;
+  const currentPlayer = room?.players.find((player) => player.id === me?.id);
+  const opponent = room?.players.find((player) => player.id !== me?.id);
   const timeLeft = question ? Math.max(0, question.deadline - now) : 0;
   const closeDialog = () => {
     setLeaveConfirm(false);
@@ -513,9 +517,6 @@ function App() {
                     <Clock3 size={17} /> Waiting for the host to start the match.
                   </div>
                 )}
-                <div className="waiting-facts">
-                  3 phases <span>·</span> 30 questions <span>·</span> One friendly rivalry
-                </div>
               </section>
             ) : room.state === 'abandoned' ? (
               <section className="panel center-state">
@@ -539,16 +540,47 @@ function App() {
                 <div className="phase-track">
                   {PHASES.map((p, i) => {
                     const Icon = phaseIcons[i];
+                    const complete = i < room.phase;
+                    const myCorrect = currentPlayer?.stats.phases[i] ?? 0;
+                    const opponentCorrect = opponent?.stats.phases[i] ?? 0;
+                    const result =
+                      complete && room.mode === 'duel' && currentPlayer && opponent
+                        ? myCorrect > opponentCorrect
+                          ? 'won'
+                          : myCorrect < opponentCorrect
+                            ? 'lost'
+                            : 'draw'
+                        : null;
+                    const resultLabel = result
+                      ? `${p}: ${result === 'draw' ? 'Draw' : result === 'won' ? 'You won' : 'You lost'}. Correct answers: you ${myCorrect}, ${opponent!.name} ${opponentCorrect}.`
+                      : undefined;
                     return (
                       <div
-                        className={`phase-track-item ${i === room.phase ? 'active' : ''} ${i < room.phase ? 'complete' : ''}`}
+                        className={`phase-track-item ${i === room.phase ? 'active' : ''} ${complete ? 'complete' : ''} ${result ? `phase-${result}` : ''}`}
                         key={p}
+                        role="group"
+                        aria-label={resultLabel ?? p}
+                        aria-current={i === room.phase ? 'step' : undefined}
+                        title={resultLabel}
                       >
-                        <span className="phase-track-icon">
-                          {i < room.phase ? <Check size={18} /> : <Icon size={18} />}
+                        <span className="phase-track-icon" aria-hidden="true">
+                          {result === 'won' ? (
+                            <Trophy size={18} />
+                          ) : result === 'lost' ? (
+                            <X size={18} />
+                          ) : result === 'draw' ? (
+                            <Minus size={18} />
+                          ) : complete ? (
+                            <Check size={18} />
+                          ) : (
+                            <Icon size={18} />
+                          )}
                         </span>
                         <div>
-                          <small>PHASE 0{i + 1}</small>
+                          <small>
+                            PHASE 0{i + 1}
+                            {result && ` · ${myCorrect}–${opponentCorrect}`}
+                          </small>
                           <strong>{p}</strong>
                         </div>
                         {i < 2 && <ChevronRight className="track-arrow" size={17} />}
@@ -658,8 +690,15 @@ function App() {
                               return (
                                 <button
                                   key={option.id}
-                                  className={`answer ${correct ? 'correct' : ''} ${wrong ? 'incorrect' : ''}`}
+                                  className={`answer ${hoveredAnswerId === option.id ? 'pointer-hovered' : ''} ${correct ? 'correct' : ''} ${wrong ? 'incorrect' : ''}`}
                                   disabled={!!feedback || busy || !connected || timeLeft <= 0}
+                                  // Option IDs are unique per question. Require fresh mouse movement
+                                  // so a stationary cursor or touch cannot highlight the next answer.
+                                  onPointerMove={(event) => {
+                                    if (event.pointerType === 'mouse')
+                                      setHoveredAnswerId(option.id);
+                                  }}
+                                  onPointerLeave={() => setHoveredAnswerId(null)}
                                   onClick={() =>
                                     send({
                                       type: 'answer',
