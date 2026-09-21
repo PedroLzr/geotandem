@@ -259,17 +259,6 @@ function App() {
                 <br />
                 One worthy <em>rival.</em>
               </h1>
-              <div className="hero-facts">
-                <span>
-                  <Users size={16} /> 2 players
-                </span>
-                <span>
-                  <Globe2 size={16} /> 40 questions
-                </span>
-                <span>
-                  <Clock3 size={16} /> 10–15 seconds each
-                </span>
-              </div>
               <div className="globe-art">
                 <img
                   src="/globe.svg"
@@ -808,8 +797,7 @@ function App() {
                                   ? 'TIMEOUT'
                                   : feedback.correct
                                     ? '✓ CORRECT'
-                                    : '✕ INCORRECT'}{' '}
-                                <span>· Next question coming up</span>
+                                    : '✕ INCORRECT'}
                               </span>
                             )}
                           </div>

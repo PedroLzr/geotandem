@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Check, Clock3, Crosshair, Minus, Plus, RotateCcw } from 'lucide-react';
+import { Check, Clock3, Crosshair, MapPin, Minus, Plus, RotateCcw } from 'lucide-react';
 import { geoEquirectangular, geoPath } from 'd3-geo';
 import type { FeatureCollection, MultiPolygon, Polygon } from 'geojson';
 import world from '../../data/location-map.json';
@@ -324,13 +324,21 @@ export default function LocationRound({
                 <title>
                   {marker.name} · {label}
                 </title>
-                <circle r={revealed ? markerRadius : 20} vectorEffect="non-scaling-stroke" />
                 {revealed ? (
-                  <text textAnchor="middle" dy="0.35em" style={{ fontSize: markerRadius * 1.1 }}>
-                    {marker.initial}
-                  </text>
+                  <>
+                    <circle r={markerRadius} vectorEffect="non-scaling-stroke" />
+                    <text textAnchor="middle" dy="0.35em" style={{ fontSize: markerRadius * 1.1 }}>
+                      {marker.initial}
+                    </text>
+                  </>
                 ) : (
-                  <path d="M-8,0 H8 M0,-8 V8" vectorEffect="non-scaling-stroke" />
+                  <MapPin
+                    className="location-pin"
+                    x={-markerRadius}
+                    y={(-markerRadius * 11) / 6}
+                    size={markerRadius * 2}
+                    aria-hidden="true"
+                  />
                 )}
               </g>
             );
@@ -378,27 +386,6 @@ export default function LocationRound({
           <strong className={ownResult?.correct ? 'correct-text' : ''}>
             {ownResult?.correct ? '✓ CORRECT' : '✕ INCORRECT'}
           </strong>
-          <div className="location-outcomes">
-            {revealed.guesses.map((guess) => (
-              <span
-                key={guess.playerId}
-                className={
-                  guess.playerId === meId
-                    ? `own ${guess.correct ? 'correct' : 'incorrect'}`
-                    : 'rival'
-                }
-              >
-                <i />
-                {guess.playerId === meId
-                  ? 'You'
-                  : room.players.find((p) => p.id === guess.playerId)?.name}
-                :{' '}
-                <strong>
-                  {guess.correct ? '✓ Correct' : guess.point ? '✕ Incorrect' : '✕ No marker'}
-                </strong>
-              </span>
-            ))}
-          </div>
           <span className="location-country-key">
             <i />
             {question.prompt.replace(/^Locate /, '')} highlighted · Next round in{' '}
@@ -415,7 +402,7 @@ export default function LocationRound({
                   ? 'Location confirmed'
                   : 'Waiting for your rival…'
               : selected
-                ? 'Auto-confirms at 0s'
+                ? null
                 : 'Tap the map to place your marker'}
           </span>
           <button className="button primary" disabled={locked || busy || !draft} onClick={confirm}>

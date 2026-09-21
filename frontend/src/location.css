@@ -63,10 +63,14 @@
   stroke-width: 1.5;
   pointer-events: none;
 }
-.location-marker path {
+.location-pin {
+  fill: #205c49;
   stroke: white;
-  stroke-width: 1.5;
-  fill: none;
+  filter: drop-shadow(0 2px 2px #0003);
+}
+.location-pin circle {
+  fill: white;
+  stroke: none;
 }
 .location-map-controls {
   position: absolute;
@@ -103,39 +107,16 @@
   font-size: 12px;
   text-align: center;
 }
-.location-outcomes {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 8px 20px;
-  margin: 10px 0;
-}
-.location-outcomes > span {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  overflow-wrap: anywhere;
-}
-.location-outcomes i,
-.location-country-key i {
-  display: inline-block;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #205c49;
-  flex-shrink: 0;
-}
-.location-outcomes .rival i {
-  background: #2563eb;
-}
-.location-outcomes .own.incorrect i {
-  background: #c43d3d;
-}
 .location-country-key {
+  display: block;
+  margin-top: 10px;
   font-size: 10px;
   color: var(--muted);
 }
 .location-country-key i {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
   background: #efd27c;
   border: 1px solid #8b6422;
   border-radius: 2px;

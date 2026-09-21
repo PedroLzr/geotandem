@@ -82,8 +82,9 @@ test('free map supports touch, zoom and pan without accidental guesses, then rev
     await b.getByRole('button', { name: 'Confirm location' }).tap();
     await expect(b.locator('.location-reveal')).toContainText('CORRECT');
     await expect(b.locator('.location-country-reveal')).toHaveCount(1);
-    await expect(b.locator('.location-outcomes .own')).toContainText('✓ Correct');
-    await expect(b.locator('.location-outcomes .rival')).toContainText('✓ Correct');
+    await expect(b.locator('.location-reveal > strong')).toHaveText('✓ CORRECT');
+    await expect(b.locator('.location-reveal')).not.toContainText('You:');
+    await expect(b.locator('.location-reveal')).not.toContainText('Atlas');
     await expect(b.locator('.location-reveal')).not.toContainText(' km');
     await expect(b.locator('.location-marker')).toHaveCount(2);
     await expect(b.locator('.location-marker.rival text')).toHaveText('A');
@@ -119,9 +120,9 @@ test('free map supports touch, zoom and pan without accidental guesses, then rev
       await page.mouse.click(point.x, point.y);
       await page.getByRole('button', { name: 'Confirm location' }).click();
     }
-    await expect(b.locator('.location-outcomes .own')).toContainText('✓ Correct');
-    await expect(b.locator('.location-outcomes .rival')).toContainText('✕ Incorrect');
-    await expect(a.locator('.location-outcomes .own')).toContainText('✕ Incorrect');
+    await expect(b.locator('.location-reveal > strong')).toHaveText('✓ CORRECT');
+    await expect(b.locator('.location-reveal')).not.toContainText('INCORRECT');
+    await expect(a.locator('.location-reveal > strong')).toHaveText('✕ INCORRECT');
     await expect(a.locator('.location-marker.own.incorrect circle')).toHaveCSS(
       'fill',
       'rgb(196, 61, 61)',
