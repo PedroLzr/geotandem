@@ -19,8 +19,19 @@ const guestSchema = z.object({
     .optional(),
 });
 const actionSchema = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('locate'),
+    questionId: z.string().uuid(),
+    point: z.tuple([z.number().finite().min(-180).max(180), z.number().finite().min(-90).max(90)]),
+  }),
+  z.object({
+    type: z.literal('confirm-location'),
+    questionId: z.string().uuid(),
+    point: z.tuple([z.number().finite().min(-180).max(180), z.number().finite().min(-90).max(90)]),
+  }),
   z.object({ type: z.literal('create') }),
   z.object({ type: z.literal('solo') }),
+  z.object({ type: z.literal('arena') }),
   z.object({ type: z.literal('join'), roomId: z.string().regex(/^[A-F0-9]{6}$/) }),
   z.object({ type: z.literal('leave') }),
   z.object({ type: z.literal('exit') }),
@@ -139,6 +150,9 @@ export function createApp() {
           case 'solo':
             engine.create(id, 'solo');
             break;
+          case 'arena':
+            engine.create(id, 'arena');
+            break;
           case 'join':
             engine.join(id, action.roomId);
             break;
@@ -160,6 +174,10 @@ export function createApp() {
             break;
           case 'answer':
             engine.answer(id, action.questionId, action.optionId);
+            break;
+          case 'locate':
+          case 'confirm-location':
+            engine.locate(id, action.questionId, action.point, action.type === 'confirm-location');
             break;
         }
         reply({ ok: true });

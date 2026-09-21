@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { GameEngine, statistics, winner, type Answer } from '../backend/engine';
 import { generateQuestions } from '../backend/questions';
 import assets from '../data/assets.json';
-import { FEEDBACK_MS, GRACE_MS, INTRO_MS, QUESTION_MS } from '../shared/types';
+import { FEEDBACK_MS, GRACE_MS, INTRO_MS, QUESTION_MS, LOCATION_REVEAL_MS } from '../shared/types';
 function setup(start = true) {
   let now = 100_000;
   const engine = new GameEngine(() => now);
@@ -230,7 +230,7 @@ test('players progress independently and phase barrier opens exactly once when b
   assert.equal(b.index, 0);
   assert.deepEqual(engine.snapshot(a.id).room!.question, engine.snapshot(b.id).room!.question);
 });
-test('all 30 answers finish a match with correct results, and mutual rematch creates fresh questions', () => {
+test('all 40 answers finish a duel with correct results, and mutual rematch creates fresh questions', () => {
   const { engine, a, b, room, advance, answer } = setup();
   const oldId = room.questions[0][0].id;
   for (let phase = 0; phase < 3; phase++) {
@@ -243,18 +243,30 @@ test('all 30 answers finish a match with correct results, and mutual rematch cre
     }
     if (phase < 2) advance(INTRO_MS);
   }
+  assert.equal(room.state, 'intro');
+  assert.equal(room.phase, 3);
+  advance(INTRO_MS);
+  for (let i = 0; i < 10; i++) {
+    const q = room.questions[3][i];
+    q.country = 'ES';
+    advance(100);
+    engine.locate(a.id, q.id, [-3.7, 40.4], true);
+    advance(100);
+    engine.locate(b.id, q.id, [0, 0], true);
+    advance(LOCATION_REVEAL_MS);
+  }
   assert.equal(room.state, 'finished');
-  assert.equal(a.answers.length, 30);
-  assert.equal(b.answers.length, 30);
+  assert.equal(a.answers.length, 40);
+  assert.equal(b.answers.length, 40);
   assert.equal(room.winnerId, a.id);
-  assert.deepEqual(statistics(a.answers).phases, [10, 10, 10]);
+  assert.deepEqual(statistics(a.answers).phases, [10, 10, 10, 10]);
   assert.equal(statistics(b.answers).correct, 15);
-  assert.equal(statistics(b.answers).accuracy, 50);
+  assert.equal(statistics(b.answers).accuracy, 37.5);
   assert.equal(statistics(a.answers).averageMs, 100);
   assert.equal(statistics(b.answers).averageMs, 200);
   assert.deepEqual(
     engine.snapshot(a.id).room!.players[1].phaseAnswers,
-    Array.from({ length: 10 }, (_, i) => i % 2 === 0),
+    Array.from({ length: 10 }, () => false),
   );
   engine.rematch(a.id);
   assert.equal(room.state, 'finished');

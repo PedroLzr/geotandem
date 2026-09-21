@@ -1,4 +1,4 @@
-import { StrictMode, useCallback, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, StrictMode, useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { io, type Socket } from 'socket.io-client';
 import {
@@ -14,7 +14,7 @@ import {
   Map,
   MapPin,
   Minus,
-  Plus,
+  UsersRound,
   RotateCcw,
   Trophy,
   Users,
@@ -22,7 +22,8 @@ import {
   X,
 } from 'lucide-react';
 import {
-  PHASES,
+  DUEL_PHASES,
+  phasesFor,
   INSTRUCTIONS,
   QUESTION_MS,
   type Action,
@@ -31,7 +32,13 @@ import {
   type Snapshot,
 } from '../../shared/types';
 import './styles.css';
-const phaseIcons = [Map, Flag, MapPin];
+import { RoomInvitation } from './RoomInvitation';
+import { ArenaWaiting, ArenaScoreboard, ArenaResults } from './Arena';
+import './arena.css';
+import './location.css';
+const loadLocationRound = () => import('./LocationRound');
+const LocationRound = lazy(loadLocationRound);
+const phaseIcons = [Map, Flag, MapPin, Globe2];
 function readGuest(): { name: string; token?: string } | null {
   try {
     return JSON.parse(sessionStorage.getItem('geotandem.guest') ?? 'null');
@@ -47,6 +54,7 @@ function saveGuest(guest: { name: string; token?: string }) {
   }
 }
 function App() {
+  const invitation = useRef(new URLSearchParams(window.location.search).get('room'));
   const [guest, setGuest] = useState(readGuest);
   const [name, setName] = useState('');
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
@@ -124,11 +132,11 @@ function App() {
   }, [leaveConfirm]);
   const send = useCallback((action: Action) => {
     if (!socket.current?.connected) return;
-    if (action.type === 'answer') {
+    if (action.type === 'answer' || action.type === 'confirm-location') {
       if (lockedQuestion.current === action.questionId) return;
       lockedQuestion.current = action.questionId;
     }
-    setBusy(true);
+    if (action.type !== 'locate') setBusy(true);
     setError('');
     socket.current.timeout(5000).emit('action', action, (err: Error | null, response: Reply) => {
       setBusy(false);
@@ -161,6 +169,23 @@ function App() {
     });
   }, []);
   const room = snapshot?.room;
+  const phases = phasesFor(room?.mode ?? 'duel');
+  useEffect(() => {
+    if (room?.mode === 'duel') void loadLocationRound();
+  }, [room?.mode]);
+  useEffect(() => {
+    if (!connected || !snapshot || !invitation.current) return;
+    const roomId = invitation.current.toUpperCase();
+    invitation.current = null;
+    const url = new URL(window.location.href);
+    url.searchParams.delete('room');
+    window.history.replaceState(null, '', url);
+    if (!/^[A-F0-9]{6}$/.test(roomId)) {
+      setError('This invitation link is invalid. Ask your friend for a new one.');
+    } else if (snapshot.room?.id !== roomId) {
+      send({ type: 'join', roomId });
+    }
+  }, [connected, snapshot, send]);
   const me = snapshot?.me;
   const exitLabel = !room ? 'Exit' : room.state === 'waiting' ? 'Leave lobby' : 'Leave game';
   const feedback = room?.feedback;
@@ -240,10 +265,10 @@ function App() {
                   <Users size={16} /> 2 players
                 </span>
                 <span>
-                  <Globe2 size={16} /> 30 questions
+                  <Globe2 size={16} /> 40 questions
                 </span>
                 <span>
-                  <Clock3 size={16} /> 10 seconds each
+                  <Clock3 size={16} /> 10–15 seconds each
                 </span>
               </div>
               <div className="globe-art">
@@ -292,13 +317,14 @@ function App() {
                     required
                   />
                   <button className="button primary full" type="submit">
-                    Enter the lobby <ArrowRight size={18} />
+                    {invitation.current ? 'Join your friend' : 'Enter the lobby'}{' '}
+                    <ArrowRight size={18} />
                   </button>
                 </form>
               </section>
               <div className="route-preview">
-                <span className="eyebrow">THREE TYPES OF QUESTIONS</span>
-                {PHASES.map((phase, i) => {
+                <span className="eyebrow">FOUR TYPES OF QUESTIONS</span>
+                {DUEL_PHASES.map((phase, i) => {
                   const Icon = phaseIcons[i];
                   return (
                     <div className="route-step" key={phase}>
@@ -313,6 +339,7 @@ function App() {
                               'Recognize the outline.',
                               'Find the familiar colors.',
                               'Name the heart of a nation.',
+                              'Find its place in the world.',
                             ][i]
                           }
                         </span>
@@ -342,7 +369,14 @@ function App() {
                   disabled={busy || !connected}
                   onClick={() => send({ type: 'create' })}
                 >
-                  <Plus size={18} /> Create Game
+                  <Users size={18} /> Create duel
+                </button>
+                <button
+                  className="button secondary create-arena-button"
+                  disabled={busy || !connected}
+                  onClick={() => send({ type: 'arena' })}
+                >
+                  <UsersRound size={18} /> Create arena <span className="arena-capacity">2–8</span>
                 </button>
                 <button
                   className="button secondary"
@@ -385,11 +419,15 @@ function App() {
                       <article className="room-row" key={r.id}>
                         <div className="avatar">{r.host.slice(0, 1).toUpperCase()}</div>
                         <div className="room-description">
-                          <h3>{r.host}’s expedition</h3>
+                          <h3>
+                            {r.host}’s {r.mode === 'arena' ? 'arena' : 'expedition'}
+                          </h3>
                           <p>
                             ROOM {r.id} <span>·</span>{' '}
                             {r.status === 'waiting'
-                              ? 'Waiting for a rival'
+                              ? r.mode === 'arena'
+                                ? 'Waiting for players'
+                                : 'Waiting for a rival'
                               : r.status === 'ready'
                                 ? 'Ready to start'
                                 : r.status === 'finished'
@@ -399,7 +437,7 @@ function App() {
                         </div>
                         <span className="occupancy">
                           <Users size={16} />
-                          {r.count}/2
+                          {r.count}/{r.mode === 'arena' ? 8 : 2}
                         </span>
                         <button
                           className={`button ${r.joinable ? 'secondary' : 'muted-button'}`}
@@ -425,7 +463,7 @@ function App() {
                   Two explorers. The same questions.
                   <br />A little race around the world.
                 </p>
-                {PHASES.map((p, i) => {
+                {DUEL_PHASES.map((p, i) => {
                   const Icon = phaseIcons[i];
                   return (
                     <div className="guide-phase" key={p}>
@@ -440,37 +478,50 @@ function App() {
                 })}
                 <div className="guide-tip">
                   <Clock3 size={20} />
-                  <p>10 seconds each</p>
+                  <p>10–15 seconds each</p>
                 </div>
               </aside>
             </div>
           </>
         ) : (
           <>
-            {room.players.some((p) => p.id !== me?.id && !p.connected) && (
-              <div className="connection-banner" role="status">
-                <WifiOff size={18} />
-                <span>
-                  Opponent disconnected. Waiting for reconnection…{' '}
-                  <strong>
-                    {Math.max(
-                      0,
-                      Math.ceil(
-                        ((room.players.find((p) => !p.connected)?.reconnectUntil ?? now) - now) /
-                          1000,
-                      ),
-                    )}
-                    s
-                  </strong>
-                  <small>Question timers continue while disconnected.</small>
-                </span>
-              </div>
-            )}
-            {room.state === 'waiting' ? (
+            {!(room.mode === 'arena' && room.state === 'finished') &&
+              room.players.some((p) => p.id !== me?.id && !p.connected) && (
+                <div className="connection-banner" role="status">
+                  <WifiOff size={18} />
+                  <span>
+                    {room.mode === 'arena'
+                      ? 'Player disconnected. Reconnecting…'
+                      : 'Opponent disconnected. Waiting for reconnection…'}{' '}
+                    <strong>
+                      {Math.max(
+                        0,
+                        Math.ceil(
+                          ((room.players.find((p) => !p.connected)?.reconnectUntil ?? now) - now) /
+                            1000,
+                        ),
+                      )}
+                      s
+                    </strong>
+                    <small>Question timers continue while disconnected.</small>
+                  </span>
+                </div>
+              )}
+            {room.state === 'waiting' && room.mode === 'arena' ? (
+              <ArenaWaiting
+                room={room}
+                meId={me!.id}
+                busy={busy || !connected}
+                onStart={() => send({ type: 'start' })}
+              />
+            ) : room.state === 'waiting' ? (
               <section className="waiting-room panel">
-                {room.players.length < 2 && (
-                  <p>Your room is live in the lobby. Invite a friend to join GeoTandem.</p>
-                )}
+                <div className="waiting-room-heading">
+                  <span className="eyebrow">ROOM {room.id}</span>
+                  {room.players.length < 2 && (
+                    <RoomInvitation key={room.id} roomId={room.id} disabled={!connected} />
+                  )}
+                </div>
                 <div className="duel-players">
                   {[0, 1].map((i) => {
                     const p = room.players[i];
@@ -524,9 +575,18 @@ function App() {
                 <h1>This expedition has ended.</h1>
                 <p>{room.reason}</p>
                 <button className="button primary" disabled={!connected || busy} onClick={leave}>
-                  Find another rival <ArrowRight size={18} />
+                  {room.mode === 'arena' ? 'Back to Game Rooms' : 'Find another rival'}{' '}
+                  <ArrowRight size={18} />
                 </button>
               </section>
+            ) : room.state === 'finished' && room.mode === 'arena' ? (
+              <ArenaResults
+                room={room}
+                meId={me!.id}
+                busy={busy || !connected}
+                onRematch={() => send({ type: 'rematch' })}
+                onLeave={leave}
+              />
             ) : room.state === 'finished' ? (
               <Results
                 room={room}
@@ -537,8 +597,8 @@ function App() {
               />
             ) : (
               <>
-                <div className="phase-track">
-                  {PHASES.map((p, i) => {
+                <div className={`phase-track ${room.mode === 'duel' ? 'duel-phase-track' : ''}`}>
+                  {phases.map((p, i) => {
                     const Icon = phaseIcons[i];
                     const complete = i < room.phase;
                     const myCorrect = currentPlayer?.stats.phases[i] ?? 0;
@@ -583,12 +643,14 @@ function App() {
                           </small>
                           <strong>{p}</strong>
                         </div>
-                        {i < 2 && <ChevronRight className="track-arrow" size={17} />}
+                        {i < phases.length - 1 && (
+                          <ChevronRight className="track-arrow" size={17} />
+                        )}
                       </div>
                     );
                   })}
                 </div>
-                <div className="game-layout">
+                <div className={`game-layout ${room.mode === 'arena' ? 'arena-game-layout' : ''}`}>
                   <section className="panel game-panel">
                     {room.state === 'intro' || room.phaseComplete ? (
                       <div className="phase-intro">
@@ -605,25 +667,34 @@ function App() {
                         <p className="eyebrow">
                           {room.phaseComplete
                             ? `PHASE 0${room.phase + 1} COMPLETE`
-                            : `PHASE 0${room.phase + 1} OF 03`}
+                            : `PHASE 0${room.phase + 1} OF 0${phases.length}`}
                         </p>
                         <h1>
                           {room.phaseComplete
-                            ? room.phase < 2
-                              ? `Next Phase: ${PHASES[room.phase + 1]}`
+                            ? room.phase < phases.length - 1
+                              ? `Next Phase: ${phases[room.phase + 1]}`
                               : 'The finish line is in sight.'
-                            : PHASES[room.phase]}
+                            : phases[room.phase]}
                         </h1>
                         <p>
                           {room.phaseComplete
-                            ? room.phase < 2
-                              ? `${INSTRUCTIONS[room.phase + 1]} You have 10 seconds per question.`
-                              : 'Your expedition is complete. Your rival is on the way.'
-                            : `${INSTRUCTIONS[room.phase]} You have 10 seconds per question.`}
+                            ? room.phase < phases.length - 1
+                              ? room.phase + 1 === 3
+                                ? 'Place your marker. You have 15 seconds per country.'
+                                : `${INSTRUCTIONS[room.phase + 1]} You have 10 seconds per question.`
+                              : room.mode === 'arena'
+                                ? 'Your expedition is complete.'
+                                : 'Your expedition is complete. Your rival is on the way.'
+                            : room.phase === 3
+                              ? 'Place your marker. You have 15 seconds per country.'
+                              : `${INSTRUCTIONS[room.phase]} You have 10 seconds per question.`}
                         </p>
                         {room.phaseComplete ? (
                           <div className="waiting-note">
-                            <Clock3 size={18} /> Waiting for opponent…
+                            <Clock3 size={18} />{' '}
+                            {room.mode === 'arena'
+                              ? `Waiting for players · ${room.players.filter((p) => p.progress === 10).length}/${room.players.length} finished`
+                              : 'Waiting for opponent…'}
                           </div>
                         ) : (
                           <>
@@ -633,6 +704,18 @@ function App() {
                           </>
                         )}
                       </div>
+                    ) : question?.kind === 'location' && room.location ? (
+                      <Suspense fallback={<div className="center-state">Loading map…</div>}>
+                        <LocationRound
+                          key={question.id}
+                          room={room}
+                          meId={me!.id}
+                          now={now}
+                          connected={connected}
+                          busy={busy}
+                          send={send}
+                        />
+                      </Suspense>
                     ) : (
                       question && (
                         <>
@@ -735,7 +818,11 @@ function App() {
                       )
                     )}
                   </section>
-                  <Scoreboard room={room} meId={me!.id} />
+                  {room.mode === 'arena' ? (
+                    <ArenaScoreboard room={room} meId={me!.id} />
+                  ) : (
+                    <Scoreboard room={room} meId={me!.id} />
+                  )}
                 </div>
               </>
             )}
@@ -762,7 +849,9 @@ function App() {
         <p>
           {room?.mode === 'solo'
             ? 'Your solo game will end. You can start a new expedition from Game Rooms.'
-            : 'Your opponent’s game will end too. You can always find a new rival in Game Rooms.'}
+            : room?.mode === 'arena'
+              ? 'You will leave the arena. The others can continue if at least two players remain.'
+              : 'Your opponent’s game will end too. You can always find a new rival in Game Rooms.'}
         </p>
         <div className="dialog-actions">
           <button className="button secondary" onClick={closeDialog}>
@@ -854,6 +943,7 @@ function Results({
 }) {
   const own = room.players.find((p) => p.id === meId)!;
   const solo = room.mode === 'solo';
+  const resultPhases = phasesFor(room.mode);
   const winner = room.players.find((p) => p.id === room.winnerId);
   return (
     <section className="results">
@@ -869,15 +959,15 @@ function Results({
               ? `${winner.name} takes the world.`
               : 'A world-class draw.'}
         </h1>
-        <p>
-          {solo
-            ? 'Three phases explored. See how well you know the world.'
-            : winner?.id === meId
+        {!solo && (
+          <p>
+            {winner?.id === meId
               ? 'Well explored. That victory has your name on it.'
               : winner
                 ? 'A worthy rival. A world of new discoveries.'
                 : 'Two curious minds, perfectly matched.'}
-        </p>
+          </p>
+        )}
       </div>
       <div className={`result-cards ${solo ? 'solo-results' : ''}`}>
         {room.players.map((p) => (
@@ -902,7 +992,7 @@ function Results({
             </h2>
             <div className="result-big">
               <strong>{p.stats.correct}</strong>
-              <span>/ 30 correct</span>
+              <span>/ {resultPhases.length * 10} correct</span>
             </div>
             <dl className="result-stats">
               <div>
@@ -923,7 +1013,7 @@ function Results({
               </div>
             </dl>
             <div className="phase-results">
-              {PHASES.map((phase, i) => (
+              {resultPhases.map((phase, i) => (
                 <div key={phase}>
                   <span>{phase}</span>
                   <strong>

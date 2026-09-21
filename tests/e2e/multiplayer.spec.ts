@@ -25,12 +25,9 @@ test('Play solo starts directly, completes three phases, reconnects and replays 
   for (const width of [1440, 540, 320]) {
     await page.setViewportSize({ width, height: 900 });
     await noOverflow(page);
-    const create = await page
-      .getByRole('button', { name: 'Create Game', exact: true })
-      .boundingBox();
-    const solo = await page.getByRole('button', { name: 'Play solo' }).boundingBox();
-    expect(solo!.x).toBeGreaterThanOrEqual(create!.x + create!.width);
-    expect(solo!.y).toBe(create!.y);
+    await expect(page.getByRole('button', { name: 'Create duel', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Create arena' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Play solo' })).toBeVisible();
   }
   await page.screenshot({ path: testInfo.outputPath('solo-lobby-320.png'), fullPage: true });
   await page.getByRole('button', { name: 'Play solo' }).click();
@@ -63,6 +60,7 @@ test('Play solo starts directly, completes three phases, reconnects and replays 
 test('two independent browsers complete all phases, reconnect, show results and start a fresh rematch', async ({
   browser,
 }) => {
+  test.setTimeout(210_000);
   const aContext = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
   const bContext = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const a = await aContext.newPage();
@@ -77,7 +75,7 @@ test('two independent browsers complete all phases, reconnect, show results and 
   await enter(a, 'Atlas Alex');
   await enter(b, 'Sierra Sam');
   await a.screenshot({ path: 'artifacts/lobby-desktop.png', fullPage: true });
-  await a.getByRole('button', { name: 'Create Game', exact: true }).click();
+  await a.getByRole('button', { name: 'Create duel', exact: true }).click();
   await expect(a.locator('header').getByRole('button', { name: 'Leave lobby' })).toBeVisible();
   await b.getByRole('button', { name: 'Join game' }).first().click();
   await expect(a.getByRole('button', { name: 'Start expedition' })).toBeEnabled();
@@ -116,6 +114,37 @@ test('two independent browsers complete all phases, reconnect, show results and 
     await noOverflow(b);
     await b.screenshot({ path: `artifacts/${phase.toLowerCase()}-320.png`, fullPage: true });
     for (let i = 0; i < 10; i++) await Promise.all([answerOne(a), answerOne(b)]);
+  }
+  await expect(a.locator('.phase-track-item.active')).toContainText('Location');
+  await expect(a.locator('.location-round')).toBeVisible();
+  await expect(b.locator('.location-round')).toBeVisible();
+  for (let i = 0; i < 10; i++) {
+    const id = await a.locator('.location-round').getAttribute('data-question-id');
+    await expect(b.locator('.location-round')).toHaveAttribute('data-question-id', id!);
+    await expect(a.locator('.location-country-reveal')).toHaveCount(0);
+    for (const page of [a, b]) {
+      await page.getByRole('application').focus();
+      await page.keyboard.press('ArrowRight');
+    }
+    await a.getByRole('button', { name: 'Confirm location' }).click();
+    await expect(a.getByText('Waiting for your rival…')).toBeVisible();
+    await expect(b.locator('.location-marker.rival')).toHaveCount(0);
+    if (i === 0) {
+      // Reload restores the saved draft. The server auto-confirms it at 15 seconds.
+      await b.reload();
+      await expect(b.locator('.location-marker.own')).toHaveCount(1);
+      await noOverflow(b);
+      await b.screenshot({ path: 'test-results/location-mobile-question.png', fullPage: true });
+    } else await b.getByRole('button', { name: 'Confirm location' }).click();
+    await expect(a.locator('.location-reveal')).toBeVisible({ timeout: 17000 });
+    await expect(b.locator('.location-country-reveal')).toHaveCount(1);
+    await expect(b.locator('.location-marker.rival')).toHaveCount(1);
+    if (i === 0) {
+      await a.screenshot({ path: 'test-results/location-desktop-reveal.png', fullPage: true });
+      await b.getByRole('button', { name: 'Zoom to highlighted country' }).click();
+      await b.screenshot({ path: 'test-results/location-mobile-reveal.png', fullPage: true });
+    }
+    await expect(a.locator(`[data-question-id="${id}"]`)).toHaveCount(0, { timeout: 7000 });
   }
   await expect(a.getByText('GEOTANDEM · MATCH COMPLETE')).toBeVisible();
   await expect(b.getByText('GEOTANDEM · MATCH COMPLETE')).toBeVisible();
@@ -165,7 +194,7 @@ test('leaving a lobby keeps the guest, while Exit clears the guest and survives 
   await enter(page, 'Map Reader');
   const exit = page.locator('header').getByRole('button', { name: 'Exit', exact: true });
   await expect(exit).toBeVisible();
-  await page.getByRole('button', { name: 'Create Game', exact: true }).click();
+  await page.getByRole('button', { name: 'Create duel', exact: true }).click();
   await page.locator('header').getByRole('button', { name: 'Leave lobby' }).click();
   await expect(exit).toBeVisible();
   await expect(page.locator('.guest-chip')).toContainText('Map Reader');

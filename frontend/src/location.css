@@ -1,0 +1,168 @@
+.location-round .question-prompt {
+  margin: 18px 0;
+}
+.location-map {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #cfddd7;
+  border-radius: 8px;
+  background: #eaf2ef;
+}
+.location-map > svg {
+  display: block;
+  width: 100%;
+  min-height: 280px;
+  max-height: 480px;
+  touch-action: none;
+  cursor: crosshair;
+  -webkit-tap-highlight-color: transparent;
+}
+.location-map > svg:focus-visible {
+  outline: 3px solid #6c8f5c;
+  outline-offset: -3px;
+}
+.location-world path {
+  fill: #f8f8ef;
+  stroke: #9aa99f;
+  stroke-width: 0.55;
+}
+.location-world.revealed path {
+  fill: #e0e7e0;
+}
+.location-world path.location-country-reveal {
+  fill: #efd27c;
+  stroke: #8b6422;
+  stroke-width: 1.5;
+}
+.location-country-outline {
+  fill: #efd27c;
+  stroke: #8b6422;
+  stroke-width: 2;
+  pointer-events: none;
+}
+.location-marker {
+  pointer-events: none;
+}
+.location-marker circle {
+  fill: #205c49;
+  stroke: white;
+  stroke-width: 2;
+}
+.location-marker.rival circle {
+  fill: #b55235;
+}
+.location-marker path {
+  stroke: white;
+  stroke-width: 1.5;
+  fill: none;
+}
+.location-map-controls {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  background: #fffef9;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.location-map-controls .icon-button {
+  width: 38px;
+  height: 38px;
+  border-radius: 0;
+}
+.location-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+}
+.location-actions > span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.location-actions .button {
+  min-height: 44px;
+}
+.location-reveal {
+  margin-top: 16px;
+  font-size: 12px;
+  text-align: center;
+}
+.location-outcomes {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 10px 0;
+}
+.location-outcomes > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  overflow-wrap: anywhere;
+}
+.location-outcomes i,
+.location-country-key i {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #205c49;
+  flex-shrink: 0;
+}
+.location-outcomes .rival i {
+  background: #b55235;
+}
+.location-country-key {
+  font-size: 10px;
+  color: var(--muted);
+}
+.location-country-key i {
+  background: #efd27c;
+  border: 1px solid #8b6422;
+  border-radius: 2px;
+  margin-right: 4px;
+}
+.phase-track.duel-phase-track {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+@media (max-width: 760px) {
+  .duel-phase-track .track-arrow {
+    display: none;
+  }
+  .duel-phase-track .phase-track-item {
+    padding-inline: 7px;
+    gap: 5px;
+  }
+  .duel-phase-track .phase-track-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+  .duel-phase-track .phase-track-icon svg {
+    width: 15px;
+  }
+  .duel-phase-track .phase-track-item strong {
+    font-size: 9px;
+  }
+  .location-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .location-actions .button {
+    width: 100%;
+  }
+}
+@media (max-width: 400px) {
+  .duel-phase-track .phase-track-icon {
+    display: none;
+  }
+  .location-map-controls .icon-button {
+    width: 34px;
+    height: 34px;
+  }
+}

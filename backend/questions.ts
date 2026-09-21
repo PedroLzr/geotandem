@@ -2,7 +2,9 @@ import { randomInt, randomUUID } from 'node:crypto';
 import countries from '../data/countries.json';
 import assetsJson from '../data/assets.json';
 import type { Option } from '../shared/types';
+import { locationCountries } from './geography';
 export interface Question {
+  kind?: 'location';
   id: string;
   prompt: string;
   visual?: string;
@@ -19,8 +21,8 @@ export function shuffle<T>(items: T[]): T[] {
   }
   return result;
 }
-export function generateQuestions(): Question[][] {
-  return [0, 1, 2].map((phase) => {
+export function generateQuestions(withLocation = false): Question[][] {
+  const phases: Question[][] = [0, 1, 2].map((phase) => {
     const pool = countries.filter((c) =>
       phase === 0 ? c.shapeEligible : phase === 1 ? c.flagEligible : c.capitalEligible,
     );
@@ -56,4 +58,18 @@ export function generateQuestions(): Question[][] {
         };
       });
   });
+  if (withLocation)
+    phases.push(
+      shuffle(locationCountries)
+        .slice(0, 10)
+        .map((country) => ({
+          id: randomUUID(),
+          kind: 'location',
+          country: country.code,
+          prompt: `Locate ${country.name}`,
+          options: [],
+          correctOptionId: '',
+        })),
+    );
+  return phases;
 }

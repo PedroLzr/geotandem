@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently -k 'tsx watch backend/index.ts' 'vite --host 0.0.0.0'",
-    "data:build": "tsx scripts/build-data.ts",
+    "data:build": "tsx scripts/build-data.ts && tsx scripts/build-location-data.ts",
     "build": "tsc --noEmit && vite build && esbuild backend/index.ts --bundle --platform=node --format=esm --packages=external --outfile=dist/server.js",
     "start": "node dist/server.js",
     "test": "tsx --test tests/*.test.ts",
@@ -22,7 +22,8 @@
     "zod": "^3.25.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "lucide-react": "^0.468.0"
+    "lucide-react": "^0.468.0",
+    "d3-geo": "^3.1.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
@@ -46,7 +47,6 @@
     "globals": "^16.0.0",
     "prettier": "^3.5.0",
     "@playwright/test": "^1.51.0",
-    "d3-geo": "^3.1.1",
     "topojson-client": "^3.1.0",
     "world-atlas": "2.0.2",
     "flag-icons": "7.3.2"
