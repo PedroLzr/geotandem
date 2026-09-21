@@ -82,10 +82,71 @@ test('eight-player arena: invite, start, play every phase, rank and reopen; mobi
           await expect(page.locator('.question-footer')).toContainText(/CORRECT|INCORRECT/);
           await expect(page.locator(`[data-question-id="${id}"]`)).toHaveCount(0);
         }
-        await expect(page.locator('.arena-results')).toBeVisible();
+        await expect(page.locator('.location-round')).toBeVisible();
       }),
     );
+    for (let round = 0; round < 10; round++) {
+      const id = await host.locator('.location-round').getAttribute('data-question-id');
+      await Promise.all(
+        pages.map(async (page) => {
+          await expect(page.locator('.location-round')).toHaveAttribute('data-question-id', id!);
+          await page.getByRole('application').focus();
+          await page.keyboard.press('ArrowRight');
+          await page.getByRole('button', { name: 'Confirm location' }).click();
+        }),
+      );
+      await expect(host.locator('.location-marker.rival')).toHaveCount(7);
+      expect((await host.locator('.location-marker.rival text').allTextContents()).sort()).toEqual([
+        'A',
+        'E',
+        'E',
+        'E',
+        'E',
+        'E',
+        'E',
+      ]);
+      await expect(host.locator('.location-marker.rival circle').first()).toHaveCSS(
+        'fill',
+        'rgb(37, 99, 235)',
+      );
+      if (round === 0) {
+        const circles = await host.locator('.location-marker circle').evaluateAll((elements) =>
+          elements.map((el) => {
+            const rect = el.getBoundingClientRect();
+            return {
+              x: rect.x + rect.width / 2,
+              y: rect.y + rect.height / 2,
+              diameter: rect.width,
+            };
+          }),
+        );
+        for (let i = 0; i < circles.length; i++)
+          for (let j = i + 1; j < circles.length; j++) {
+            expect(
+              Math.hypot(circles[i].x - circles[j].x, circles[i].y - circles[j].y),
+            ).toBeGreaterThan(circles[i].diameter);
+          }
+        for (const [page, name] of [
+          [host, 'desktop'],
+          [pages[1], 'mobile'],
+        ] as const) {
+          await page.screenshot({
+            path: testInfo.outputPath(`arena-location-${name}.png`),
+            fullPage: true,
+          });
+          expect(
+            await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+          ).toBe(true);
+        }
+      }
+      await Promise.all(
+        pages.map((page) => expect(page.locator(`[data-question-id="${id}"]`)).toHaveCount(0)),
+      );
+    }
     await expect(host.locator('.arena-results tbody tr')).toHaveCount(8);
+    await expect(host.locator('.arena-results tbody tr').first()).toContainText('/ 40');
+    await host.locator('.arena-personal-stats summary').click();
+    await expect(host.locator('.arena-personal-stats')).toContainText('Location');
     await expect(pages[1].locator('.arena-own-row')).toHaveCount(1);
     await host.screenshot({
       path: testInfo.outputPath('arena-results-desktop.png'),

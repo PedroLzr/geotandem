@@ -86,6 +86,13 @@ test('free map supports touch, zoom and pan without accidental guesses, then rev
     await expect(b.locator('.location-outcomes .rival')).toContainText('✓ Correct');
     await expect(b.locator('.location-reveal')).not.toContainText(' km');
     await expect(b.locator('.location-marker')).toHaveCount(2);
+    await expect(b.locator('.location-marker.rival text')).toHaveText('A');
+    await expect(a.locator('.location-marker.rival text')).toHaveText('S');
+    await expect(b.locator('.location-marker.rival circle')).toHaveCSS('fill', 'rgb(37, 99, 235)');
+    await expect(b.locator('.location-marker.own.correct circle')).toHaveCSS(
+      'fill',
+      'rgb(32, 92, 73)',
+    );
     await a.screenshot({ path: testInfo.outputPath('map-desktop-reveal.png'), fullPage: true });
     await b.getByRole('button', { name: 'Zoom to highlighted country' }).tap();
     await b.screenshot({ path: testInfo.outputPath('map-mobile-country.png'), fullPage: true });
@@ -115,6 +122,11 @@ test('free map supports touch, zoom and pan without accidental guesses, then rev
     await expect(b.locator('.location-outcomes .own')).toContainText('✓ Correct');
     await expect(b.locator('.location-outcomes .rival')).toContainText('✕ Incorrect');
     await expect(a.locator('.location-outcomes .own')).toContainText('✕ Incorrect');
+    await expect(a.locator('.location-marker.own.incorrect circle')).toHaveCSS(
+      'fill',
+      'rgb(196, 61, 61)',
+    );
+    await expect(b.locator('.location-marker.rival circle')).toHaveCSS('fill', 'rgb(37, 99, 235)');
     await b.screenshot({
       path: testInfo.outputPath('map-mobile-mixed-results.png'),
       fullPage: true,

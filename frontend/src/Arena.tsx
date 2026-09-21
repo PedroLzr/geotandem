@@ -88,7 +88,7 @@ function ArenaStandings({ room, meId, final = false }: ArenaProps & { final?: bo
             </th>
             <td>
               {p.stats.correct}
-              {final && <small> / 30</small>}
+              {final && <small> / {PHASES.length * 10}</small>}
             </td>
             {final && <td>{(p.stats.averageMs / 1000).toFixed(2)}s</td>}
           </tr>

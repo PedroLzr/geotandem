@@ -21,7 +21,7 @@ export function shuffle<T>(items: T[]): T[] {
   }
   return result;
 }
-export function generateQuestions(withLocation = false): Question[][] {
+export function generateQuestions(): Question[][] {
   const phases: Question[][] = [0, 1, 2].map((phase) => {
     const pool = countries.filter((c) =>
       phase === 0 ? c.shapeEligible : phase === 1 ? c.flagEligible : c.capitalEligible,
@@ -58,18 +58,17 @@ export function generateQuestions(withLocation = false): Question[][] {
         };
       });
   });
-  if (withLocation)
-    phases.push(
-      shuffle(locationCountries)
-        .slice(0, 10)
-        .map((country) => ({
-          id: randomUUID(),
-          kind: 'location',
-          country: country.code,
-          prompt: `Locate ${country.name}`,
-          options: [],
-          correctOptionId: '',
-        })),
-    );
+  phases.push(
+    shuffle(locationCountries)
+      .slice(0, 10)
+      .map((country) => ({
+        id: randomUUID(),
+        kind: 'location',
+        country: country.code,
+        prompt: `Locate ${country.name}`,
+        options: [],
+        correctOptionId: '',
+      })),
+  );
   return phases;
 }

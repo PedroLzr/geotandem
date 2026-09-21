@@ -18,7 +18,7 @@ async function answerOne(page: Page) {
 async function noOverflow(page: Page) {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 }
-test('Play solo starts directly, completes three phases, reconnects and replays without an opponent', async ({
+test('Play solo starts directly, completes four phases, reconnects and replays without an opponent', async ({
   page,
 }, testInfo) => {
   await enter(page, 'Solo explorer');
@@ -43,8 +43,33 @@ test('Play solo starts directly, completes three phases, reconnects and replays 
     await expect(page.locator('.phase-track-item.active')).toContainText(phase);
     for (let i = 0; i < 10; i++) await answerOne(page);
   }
+  await expect(page.locator('.phase-track-item.active')).toContainText('Location');
+  for (let i = 0; i < 10; i++) {
+    await expect(page.locator('.location-round')).toBeVisible();
+    const id = await page.locator('.location-round').getAttribute('data-question-id');
+    await page.getByRole('application').focus();
+    await page.keyboard.press('ArrowRight');
+    if (i === 0) {
+      await page.reload();
+      await expect(page.locator('.location-marker.own')).toHaveCount(1);
+    }
+    await page.getByRole('button', { name: 'Confirm location' }).click();
+    await expect(page.locator('.location-reveal')).toBeVisible();
+    await expect(page.locator('.location-marker.rival')).toHaveCount(0);
+    await expect(page.locator('.location-marker.own.incorrect circle')).toHaveCSS(
+      'fill',
+      'rgb(196, 61, 61)',
+    );
+    if (i === 0) {
+      await noOverflow(page);
+      await page.screenshot({ path: testInfo.outputPath('solo-location-320.png'), fullPage: true });
+    }
+    await expect(page.locator(`[data-question-id="${id}"]`)).toHaveCount(0);
+  }
   await expect(page.getByRole('heading', { name: 'Your expedition is complete.' })).toBeVisible();
   await expect(page.locator('.result-card')).toHaveCount(1);
+  await expect(page.locator('.phase-results')).toContainText('Location');
+  await expect(page.locator('.result-big')).toContainText('/ 40 correct');
   await expect(page.getByText('SOLO EXPLORER', { exact: true })).toBeVisible();
   await expect(page.getByText('DRAW', { exact: true })).toHaveCount(0);
   await noOverflow(page);

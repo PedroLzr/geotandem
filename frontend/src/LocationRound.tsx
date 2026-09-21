@@ -63,6 +63,7 @@ export default function LocationRound({
   const location = room.location!;
   const [draft, setDraft] = useState<Coordinates | null>(location.draft);
   const [view, setView] = useState(initialView);
+  const [markerRadius, setMarkerRadius] = useState(20);
   const svg = useRef<SVGSVGElement>(null);
   const pointers = useRef(new Map<number, Coordinates>());
   const gesture = useRef({ start: [0, 0] as Coordinates, moved: false });
@@ -112,18 +113,26 @@ export default function LocationRound({
     return bound({ k, x: 500 - ((x0 + x1) / 2) * k, y: 300 - ((y0 + y1) / 2) * k });
   }, [countryId, revealPoints]);
   useEffect(() => {
-    // Frame the country and both guesses together; keep small targets readable.
+    // Frame the country and all guesses together; keep small targets readable.
     if (revealUntil) setView(revealView);
   }, [revealUntil, revealView]);
   useEffect(() => {
     const element = svg.current!;
+    const resize = new ResizeObserver(() => {
+      const scale = element.getScreenCTM()?.a ?? 1;
+      if (scale > 0) setMarkerRadius(Math.max(20, 14 / scale));
+    });
+    resize.observe(element);
     const wheel = (event: WheelEvent) => {
       event.preventDefault();
       const [x, y] = svgPoint(element, event.clientX, event.clientY);
       setView((v) => zoom(v, Math.exp(-Math.max(-100, Math.min(100, event.deltaY)) * 0.006), x, y));
     };
     element.addEventListener('wheel', wheel, { passive: false });
-    return () => element.removeEventListener('wheel', wheel);
+    return () => {
+      resize.disconnect();
+      element.removeEventListener('wheel', wheel);
+    };
   }, []);
   const confirm = () => {
     if (draft && !locked) send({ type: 'confirm-location', questionId: question.id, point: draft });
@@ -131,11 +140,38 @@ export default function LocationRound({
   const markers = revealed
     ? revealed.guesses
         .filter((g) => g.point)
-        .map((g) => ({ point: g.point!, own: g.playerId === meId }))
-        .sort((a, b) => Number(a.own) - Number(b.own))
+        .map((g) => ({ ...g, point: g.point!, own: g.playerId === meId }))
+        .sort((a, b) => Number(b.own) - Number(a.own))
     : selected
-      ? [{ point: selected, own: true }]
+      ? [{ playerId: meId, point: selected, own: true, correct: null }]
       : [];
+  const placed: Coordinates[] = [];
+  const markerLayout = markers.map((marker) => {
+    const projected = projection(marker.point)!;
+    const anchor: Coordinates = [projected[0] * view.k + view.x, projected[1] * view.k + view.y];
+    let [x, y] = anchor;
+    // Separate overlapping badges, with a leader back to the actual guess.
+    if (revealed) {
+      for (let attempt = 0; attempt < 129; attempt++) {
+        const radius = attempt === 0 ? 0 : Math.ceil(attempt / 16) * (markerRadius * 2 + 8);
+        const angle = ((attempt - 1) % 16) * (Math.PI / 8);
+        const inset = markerRadius + 4;
+        x = Math.max(inset, Math.min(1000 - inset, anchor[0] + Math.cos(angle) * radius));
+        y = Math.max(inset, Math.min(600 - inset, anchor[1] + Math.sin(angle) * radius));
+        if (placed.every(([px, py]) => Math.hypot(x - px, y - py) >= markerRadius * 2 + 4)) break;
+      }
+    }
+    placed.push([x, y]);
+    const name = room.players.find((p) => p.id === marker.playerId)?.name ?? 'Explorer';
+    return {
+      ...marker,
+      x,
+      y,
+      anchor,
+      name,
+      initial: Array.from(name.trim())[0]?.toUpperCase() ?? '?',
+    };
+  });
   return (
     <div className="location-round" data-question-id={question.id}>
       <div className="question-top">
@@ -264,23 +300,41 @@ export default function LocationRound({
                 vectorEffect="non-scaling-stroke"
               />
             )}
-            {markers.map((marker, i) => {
-              const [x, y] = projection(marker.point)!;
-              return (
-                <g
-                  key={i}
-                  className={`location-marker ${marker.own ? 'own' : 'rival'}`}
-                  transform={`translate(${x} ${y})`}
-                >
-                  <circle r={(marker.own ? 20 : 34) / view.k} vectorEffect="non-scaling-stroke" />
-                  <path
-                    d={`M${-8 / view.k},0 H${8 / view.k} M0,${-8 / view.k} V${8 / view.k}`}
-                    vectorEffect="non-scaling-stroke"
-                  />
-                </g>
-              );
-            })}
           </g>
+          {markerLayout.map((marker) => (
+            <line
+              key={marker.playerId}
+              className="location-marker-leader"
+              x1={marker.anchor[0]}
+              y1={marker.anchor[1]}
+              x2={marker.x}
+              y2={marker.y}
+            />
+          ))}
+          {markerLayout.map((marker) => {
+            const label = `${marker.own ? 'You' : marker.name}${revealed ? `: ${marker.correct ? 'Correct' : 'Incorrect'}` : ': Selected location'}`;
+            return (
+              <g
+                key={marker.playerId}
+                className={`location-marker ${marker.own ? `own${revealed ? (marker.correct ? ' correct' : ' incorrect') : ''}` : 'rival'}`}
+                transform={`translate(${marker.x} ${marker.y})`}
+                role="img"
+                aria-label={label}
+              >
+                <title>
+                  {marker.name} · {label}
+                </title>
+                <circle r={revealed ? markerRadius : 20} vectorEffect="non-scaling-stroke" />
+                {revealed ? (
+                  <text textAnchor="middle" dy="0.35em" style={{ fontSize: markerRadius * 1.1 }}>
+                    {marker.initial}
+                  </text>
+                ) : (
+                  <path d="M-8,0 H8 M0,-8 V8" vectorEffect="non-scaling-stroke" />
+                )}
+              </g>
+            );
+          })}
         </svg>
         <div className="location-map-controls">
           <button
@@ -326,7 +380,14 @@ export default function LocationRound({
           </strong>
           <div className="location-outcomes">
             {revealed.guesses.map((guess) => (
-              <span key={guess.playerId} className={guess.playerId === meId ? 'own' : 'rival'}>
+              <span
+                key={guess.playerId}
+                className={
+                  guess.playerId === meId
+                    ? `own ${guess.correct ? 'correct' : 'incorrect'}`
+                    : 'rival'
+                }
+              >
                 <i />
                 {guess.playerId === meId
                   ? 'You'
@@ -348,7 +409,11 @@ export default function LocationRound({
         <div className="location-actions">
           <span role="status">
             {location.confirmed
-              ? 'Waiting for your rival…'
+              ? room.mode === 'arena'
+                ? 'Waiting for the other players…'
+                : room.mode === 'solo'
+                  ? 'Location confirmed'
+                  : 'Waiting for your rival…'
               : selected
                 ? 'Auto-confirms at 0s'
                 : 'Tap the map to place your marker'}

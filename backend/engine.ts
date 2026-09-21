@@ -17,6 +17,7 @@ import {
   type LocationView,
   LOCATION_MS,
   LOCATION_REVEAL_MS,
+  PHASES,
 } from '../shared/types';
 export interface Answer {
   phase: number;
@@ -69,7 +70,7 @@ export function statistics(answers: Answer[]): Statistics {
       : 0,
     accuracy: answers.length ? (correct / answers.length) * 100 : 0,
     phases: Array.from(
-      { length: answers.some((a) => a.phase === 3) ? 4 : 3 },
+      { length: PHASES.length },
       (_, p) => answers.filter((a) => a.phase === p && a.correct).length,
     ),
   };
@@ -233,7 +234,7 @@ export class GameEngine {
             ? 'An arena needs 2–8 connected players to start.'
             : 'Both players must be connected to start.',
       );
-    r.questions = generateQuestions(r.mode === 'duel');
+    r.questions = generateQuestions();
     r.phase = 0;
     r.winnerId = null;
     r.reason = null;
@@ -251,6 +252,16 @@ export class GameEngine {
     p.rematch = false;
     p.locationDraft = null;
     p.locationConfirmedAt = null;
+  }
+  private finish(r: Room) {
+    r.state = 'finished';
+    r.winnerId = r.mode === 'duel' ? winner(r.playerIds.map((id) => this.player(id))) : null;
+    if (r.mode === 'arena') {
+      r.finalPlayers = r.playerIds.map((id) => this.playerView(id, r.phase));
+      const leaders = arenaRanking(r.finalPlayers).filter((entry) => entry.rank === 1);
+      r.winnerId = leaders.length === 1 ? leaders[0].player.id : null;
+    }
+    r.updatedAt = this.now();
   }
   private intro(r: Room) {
     r.state = 'intro';
@@ -422,11 +433,7 @@ export class GameEngine {
             p.startedAt = now;
           }
           r.locationReveal = null;
-          if (this.player(r.playerIds[0]).index === 10) {
-            r.state = 'finished';
-            r.winnerId = winner(r.playerIds.map((id) => this.player(id)));
-            r.updatedAt = now;
-          }
+          if (this.player(r.playerIds[0]).index === 10) this.finish(r);
           changed = true;
         } else if (!r.locationReveal && this.resolveLocation(r)) changed = true;
         continue;
@@ -446,14 +453,7 @@ export class GameEngine {
       }
       if (r.playerIds.every((id) => this.player(id).index === 10)) {
         if (r.phase === r.questions.length - 1) {
-          r.state = 'finished';
-          r.winnerId = r.mode === 'duel' ? winner(r.playerIds.map((id) => this.player(id))) : null;
-          if (r.mode === 'arena') {
-            r.finalPlayers = r.playerIds.map((id) => this.playerView(id, r.phase));
-            const leaders = arenaRanking(r.finalPlayers).filter((entry) => entry.rank === 1);
-            r.winnerId = leaders.length === 1 ? leaders[0].player.id : null;
-          }
-          r.updatedAt = now;
+          this.finish(r);
         } else {
           r.phase++;
           this.intro(r);

@@ -195,15 +195,15 @@ test('ten synchronized rounds finish the duel and rematch clears every location 
   assert.equal(room.locationReveal, null);
 });
 
-test('solo and arena keep exactly their original three phases', () => {
+test('solo and arena include the fourth location phase', () => {
   const engine = new GameEngine();
   const a = engine.connect('Solo');
   engine.create(a.id, 'solo');
-  assert.equal(engine.roomFor(a.id).questions.length, 3);
+  assert.equal(engine.roomFor(a.id).questions.length, 4);
   const b = engine.connect('Host'),
     c = engine.connect('Guest');
   engine.create(b.id, 'arena');
   engine.join(c.id, b.roomId!);
   engine.start(b.id);
-  assert.equal(engine.roomFor(b.id).questions.length, 3);
+  assert.equal(engine.roomFor(b.id).questions.length, 4);
 });

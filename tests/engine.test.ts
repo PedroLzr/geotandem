@@ -3,7 +3,14 @@ import assert from 'node:assert/strict';
 import { GameEngine, statistics, winner, type Answer } from '../backend/engine';
 import { generateQuestions } from '../backend/questions';
 import assets from '../data/assets.json';
-import { FEEDBACK_MS, GRACE_MS, INTRO_MS, QUESTION_MS, LOCATION_REVEAL_MS } from '../shared/types';
+import {
+  FEEDBACK_MS,
+  GRACE_MS,
+  INTRO_MS,
+  QUESTION_MS,
+  LOCATION_MS,
+  LOCATION_REVEAL_MS,
+} from '../shared/types';
 function setup(start = true) {
   let now = 100_000;
   const engine = new GameEngine(() => now);
@@ -85,14 +92,28 @@ test('solo games start immediately, stay private, score all phases and restart w
       }
       advance(FEEDBACK_MS);
     }
-    assert.equal(room.state, phase === 2 ? 'finished' : 'intro');
+    assert.equal(room.state, 'intro');
   }
+  advance(INTRO_MS);
+  assert.equal(room.phase, 3);
+  for (let index = 0; index < 10; index++) {
+    const question = room.questions[3][index];
+    question.country = 'ES';
+    if (index === 9) advance(LOCATION_MS);
+    else {
+      advance(100);
+      engine.locate(player.id, question.id, index % 2 === 0 ? [-3.7, 40.4] : [0, 0], true);
+      assert.ok(room.locationReveal);
+    }
+    advance(LOCATION_REVEAL_MS);
+  }
+  assert.equal(room.state, 'finished');
   const stats = engine.snapshot(player.id).room!.players[0].stats;
-  assert.equal(stats.total, 30);
-  assert.equal(stats.correct, 15);
-  assert.equal(stats.incorrect, 15);
-  assert.equal(stats.timeouts, 3);
-  assert.deepEqual(stats.phases, [5, 5, 5]);
+  assert.equal(stats.total, 40);
+  assert.equal(stats.correct, 20);
+  assert.equal(stats.incorrect, 20);
+  assert.equal(stats.timeouts, 4);
+  assert.deepEqual(stats.phases, [5, 5, 5, 5]);
   assert.equal(room.winnerId, null);
   assert.deepEqual(engine.snapshot(observer.id).rooms, []);
   engine.rematch(player.id);
@@ -116,13 +137,22 @@ test('a disconnected solo game is cleaned up after the reconnection grace period
   assert.equal(engine.rooms.has(roomId), false);
   assert.equal(player.roomId, null);
 });
-test('question sets have three phases, ten distinct countries, six unique options and exactly one correct answer', () => {
+test('question sets have four phases with ten distinct countries and valid options or location targets', () => {
   for (let attempt = 0; attempt < 15; attempt++) {
     const phases = generateQuestions();
-    assert.equal(phases.length, 3);
+    assert.equal(phases.length, 4);
     for (const questions of phases) {
       assert.equal(questions.length, 10);
       assert.equal(new Set(questions.map((q) => q.country)).size, 10);
+      if (questions[0].kind === 'location') {
+        assert.ok(
+          questions.every(
+            (q) =>
+              q.kind === 'location' && q.options.length === 0 && q.prompt.startsWith('Locate '),
+          ),
+        );
+        continue;
+      }
       for (const q of questions) {
         assert.equal(q.options.length, 6);
         assert.equal(new Set(q.options.map((o) => o.text)).size, 6);

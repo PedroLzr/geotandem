@@ -49,7 +49,19 @@
   stroke-width: 2;
 }
 .location-marker.rival circle {
-  fill: #b55235;
+  fill: #2563eb;
+}
+.location-marker.own.incorrect circle {
+  fill: #c43d3d;
+}
+.location-marker text {
+  fill: white;
+  font-weight: 700;
+}
+.location-marker-leader {
+  stroke: #536b7a;
+  stroke-width: 1.5;
+  pointer-events: none;
 }
 .location-marker path {
   stroke: white;
@@ -114,7 +126,10 @@
   flex-shrink: 0;
 }
 .location-outcomes .rival i {
-  background: #b55235;
+  background: #2563eb;
+}
+.location-outcomes .own.incorrect i {
+  background: #c43d3d;
 }
 .location-country-key {
   font-size: 10px;
@@ -126,27 +141,27 @@
   border-radius: 2px;
   margin-right: 4px;
 }
-.phase-track.duel-phase-track {
+.phase-track.four-phase-track {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 @media (max-width: 760px) {
-  .duel-phase-track .track-arrow {
+  .four-phase-track .track-arrow {
     display: none;
   }
-  .duel-phase-track .phase-track-item {
+  .four-phase-track .phase-track-item {
     padding-inline: 7px;
     gap: 5px;
   }
-  .duel-phase-track .phase-track-icon {
+  .four-phase-track .phase-track-icon {
     width: 24px;
     height: 24px;
     flex-shrink: 0;
   }
-  .duel-phase-track .phase-track-icon svg {
+  .four-phase-track .phase-track-icon svg {
     width: 15px;
   }
-  .duel-phase-track .phase-track-item strong {
+  .four-phase-track .phase-track-item strong {
     font-size: 9px;
   }
   .location-actions {
@@ -158,7 +173,7 @@
   }
 }
 @media (max-width: 400px) {
-  .duel-phase-track .phase-track-icon {
+  .four-phase-track .phase-track-icon {
     display: none;
   }
   .location-map-controls .icon-button {

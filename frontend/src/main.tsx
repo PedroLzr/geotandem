@@ -22,8 +22,7 @@ import {
   X,
 } from 'lucide-react';
 import {
-  DUEL_PHASES,
-  phasesFor,
+  PHASES,
   INSTRUCTIONS,
   QUESTION_MS,
   type Action,
@@ -169,9 +168,9 @@ function App() {
     });
   }, []);
   const room = snapshot?.room;
-  const phases = phasesFor(room?.mode ?? 'duel');
+  const phases = PHASES;
   useEffect(() => {
-    if (room?.mode === 'duel') void loadLocationRound();
+    if (room?.mode) void loadLocationRound();
   }, [room?.mode]);
   useEffect(() => {
     if (!connected || !snapshot || !invitation.current) return;
@@ -324,7 +323,7 @@ function App() {
               </section>
               <div className="route-preview">
                 <span className="eyebrow">FOUR TYPES OF QUESTIONS</span>
-                {DUEL_PHASES.map((phase, i) => {
+                {PHASES.map((phase, i) => {
                   const Icon = phaseIcons[i];
                   return (
                     <div className="route-step" key={phase}>
@@ -463,7 +462,7 @@ function App() {
                   Two explorers. The same questions.
                   <br />A little race around the world.
                 </p>
-                {DUEL_PHASES.map((p, i) => {
+                {PHASES.map((p, i) => {
                   const Icon = phaseIcons[i];
                   return (
                     <div className="guide-phase" key={p}>
@@ -597,7 +596,7 @@ function App() {
               />
             ) : (
               <>
-                <div className={`phase-track ${room.mode === 'duel' ? 'duel-phase-track' : ''}`}>
+                <div className="phase-track four-phase-track">
                   {phases.map((p, i) => {
                     const Icon = phaseIcons[i];
                     const complete = i < room.phase;
@@ -943,7 +942,7 @@ function Results({
 }) {
   const own = room.players.find((p) => p.id === meId)!;
   const solo = room.mode === 'solo';
-  const resultPhases = phasesFor(room.mode);
+  const resultPhases = PHASES;
   const winner = room.players.find((p) => p.id === room.winnerId);
   return (
     <section className="results">

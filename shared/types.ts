@@ -1,4 +1,4 @@
-export const PHASES = ['Country Shapes', 'Flags', 'Capitals'] as const;
+export const PHASES = ['Country Shapes', 'Flags', 'Capitals', 'Location'] as const;
 export const INSTRUCTIONS = [
   'Identify the country from its shape.',
   'Identify the country from its flag.',
@@ -9,7 +9,6 @@ export const INTRO_MS = 3_000;
 export const FEEDBACK_MS = 850;
 export const GRACE_MS = 45_000;
 export const ARENA_CAPACITY = 8;
-export const DUEL_PHASES = [...PHASES, 'Location'] as const;
 export const LOCATION_MS = 15_000;
 export const LOCATION_REVEAL_MS = 4_000;
 export type Coordinates = [number, number]; // longitude, latitude
@@ -22,9 +21,6 @@ export interface LocationView {
   draft: Coordinates | null;
   confirmed: boolean;
   reveal: { countryId: string; guesses: LocationResult[]; until: number } | null;
-}
-export function phasesFor(mode: RoomView['mode']) {
-  return mode === 'duel' ? DUEL_PHASES : PHASES;
 }
 export interface Option {
   id: string;

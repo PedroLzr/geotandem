@@ -30,7 +30,7 @@ docker compose down              # Detener y eliminar el contenedor
 4. Cuando ambos estéis conectados, quien creó la sala pulsa **Start expedition**.
 5. Al terminar, ambos podéis pulsar **Play Again** para jugar una nueva partida.
 
-Para jugar en solitario, pulsa **Play solo**, junto a **Create duel**. La partida empieza directamente con la cuenta atrás de la primera fase, sin esperar a otro jugador. Completa las mismas 30 preguntas, consulta tus resultados y pulsa **Play Again** para empezar otra partida. Las partidas individuales no aparecen en la lista pública de salas.
+Para jugar en solitario, pulsa **Play solo**, junto a **Create duel**. La partida empieza directamente con la cuenta atrás de la primera fase, sin esperar a otro jugador. Completa las mismas 40 preguntas, consulta tus resultados y pulsa **Play Again** para empezar otra partida. Las partidas individuales no aparecen en la lista pública de salas.
 
 Para jugar en grupo, pulsa **Create arena · 2–8**. Comparte la invitación desde la sala; el anfitrión puede iniciar con entre dos y ocho participantes conectados. Una vez iniciada, no se admiten nuevos jugadores. La clasificación se muestra junto a la pregunta en escritorio y se despliega al tocar **Leaderboard** en móvil. Al terminar, el anfitrión puede pulsar **Play again** para volver a la sala, invitar y lanzar otra partida. El modo Duelo conserva sus reglas y pantallas.
 
@@ -40,22 +40,23 @@ Para jugar desde otro dispositivo de la misma red, abre `http://IP-DEL-SERVIDOR:
 
 ### Reglas
 
-- Solo y Arena tienen tres fases: siluetas, banderas y capitales. Duelo añade una cuarta fase obligatoria: **Ubicación**.
-- Cada fase tiene 10 preguntas: **40 en Duelo, 30 en Solo y Arena**.
+- Solo, Duelo y Arena tienen cuatro fases: siluetas, banderas, capitales y **Ubicación**.
+- Cada fase tiene 10 preguntas: **40 en todos los modos**.
 - En las tres primeras fases, cada pregunta ofrece seis opciones, una correcta y **10 segundos** para responder.
 - Todos los jugadores reciben las mismas preguntas y opciones, en el mismo orden.
 - En las tres primeras fases, cada jugador avanza a su ritmo. La siguiente fase empieza cuando todos terminan la anterior, tras una cuenta atrás de tres segundos. En solitario, basta con terminar tus diez preguntas. Ubicación avanza de forma sincronizada.
 - En las preguntas de opciones, la respuesta queda fijada al seleccionarla. Si se agota el tiempo, cuenta como fallo y registra 10 segundos de respuesta.
 - En Duelo y Arena, gana quien tenga más aciertos. En caso de empate, gana quien tenga menor tiempo medio de respuesta, calculado sobre todas las preguntas. Si la diferencia es inferior a 10 milisegundos, hay empate. En solitario se muestran tus estadísticas, sin clasificación frente a un rival.
 
-### Ubicación (solo Duelo)
+### Ubicación (Solo, Duelo y Arena)
 
 - Cada ronda ofrece un mapa libre sin etiquetas y **15 segundos**. Se puede ampliar, desplazar y colocar o mover un marcador; **Confirm location** lo bloquea.
-- El servidor conserva el último marcador recibido y lo confirma automáticamente al agotar el tiempo. Sin marcador, la respuesta es incorrecta. Una confirmación manual no revela nada al rival antes de resolver la ronda.
-- Un marcador **dentro del país es acierto**; fuera del país o sin marcador, es fallo. Cada jugador se evalúa de forma independiente: ambos pueden acertar o fallar. Se usa la misma selección territorial que en las siluetas y la misma geometría para pintar y puntuar.
-- Al confirmar ambos o agotar el tiempo, se muestran los dos marcadores, el acierto o fallo de cada jugador y el país completo en dorado durante cuatro segundos. La vista encuadra las selecciones y el país; un control permite ampliar el país resaltado.
-- Esos aciertos, fallos y tiempos se incorporan a las estadísticas habituales y al resultado de las 40 preguntas. Solo y Arena mantienen las tres fases anteriores.
-- Los mapas se empaquetan con la aplicación y se precargan al entrar en un duelo; no dependen de servicios externos. `npm run data:build` regenera las siluetas, banderas y geometrías.
+- El servidor conserva el último marcador recibido y lo confirma automáticamente al agotar el tiempo. Sin marcador, la respuesta es incorrecta. Una confirmación manual no revela nada a los contrincantes antes de resolver la ronda.
+- Un marcador **dentro del país es acierto**; fuera del país o sin marcador, es fallo. Cada jugador se evalúa de forma independiente: todos pueden acertar o fallar. Se usa la misma selección territorial que en las siluetas y la misma geometría para pintar y puntuar.
+- Al confirmar todos los jugadores o agotar el tiempo, se muestran sus marcadores, el acierto o fallo de cada jugador y el país completo en dorado durante cuatro segundos. La vista encuadra las selecciones y el país; un control permite ampliar el país resaltado.
+- Los marcadores muestran la inicial de cada jugador: los contrincantes en azul y el propio en verde si aciertas o rojo si fallas. Si se solapan, se separan con líneas que señalan las ubicaciones elegidas.
+- Esos aciertos, fallos y tiempos se incorporan a las estadísticas habituales y al resultado de las 40 preguntas.
+- Los mapas se empaquetan con la aplicación y se precargan al entrar en una partida; no dependen de servicios externos. `npm run data:build` regenera las siluetas, banderas y geometrías.
 
 ### Si se pierde la conexión
 
