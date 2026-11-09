@@ -24,13 +24,13 @@ import {
 import {
   PHASES,
   INSTRUCTIONS,
-  QUESTION_MS,
   type Action,
   type Reply,
   type RoomView,
   type Snapshot,
 } from '../../shared/types';
 import './styles.css';
+import { Countdown, QuestionClock, useExpired } from './QuestionClock';
 import { RoomInvitation } from './RoomInvitation';
 import { ArenaWaiting, ArenaScoreboard, ArenaResults } from './Arena';
 import './arena.css';
@@ -62,16 +62,15 @@ function App() {
   const [busy, setBusy] = useState(false);
   const [hoveredAnswerId, setHoveredAnswerId] = useState<string | null>(null);
   const [leaveConfirm, setLeaveConfirm] = useState(false);
-  const [now, setNow] = useState(Date.now());
+  const [pendingAnswer, setPendingAnswer] = useState<{
+    questionId: string;
+    optionId: string;
+  } | null>(null);
   const socket = useRef<Socket | null>(null);
   const offset = useRef(0);
   const synced = useRef(false);
   const lockedQuestion = useRef<string | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
-    const timer = setInterval(() => setNow(Date.now() + offset.current), 75);
-    return () => clearInterval(timer);
-  }, []);
   useEffect(() => {
     if (!guest) return;
     const connection = io({ auth: guest, reconnectionDelay: 500, reconnectionDelayMax: 3000 });
@@ -92,6 +91,7 @@ function App() {
     });
     connection.on('disconnect', () => {
       setConnected(false);
+      setPendingAnswer(null);
       setBusy(false);
       lockedQuestion.current = null;
     });
@@ -110,6 +110,9 @@ function App() {
     connection.on('snapshot', (state: Snapshot) => {
       if (!synced.current) offset.current = state.serverNow - Date.now();
       setSnapshot(state);
+      setPendingAnswer((pending) =>
+        pending?.questionId === state.room?.question?.id && !state.room?.feedback ? pending : null,
+      );
       setBusy(false);
       if (lockedQuestion.current !== state.room?.question?.id || state.room?.feedback)
         lockedQuestion.current = null;
@@ -135,12 +138,15 @@ function App() {
       if (lockedQuestion.current === action.questionId) return;
       lockedQuestion.current = action.questionId;
     }
+    if (action.type === 'answer')
+      setPendingAnswer({ questionId: action.questionId, optionId: action.optionId });
     if (action.type !== 'locate') setBusy(true);
     setError('');
     socket.current.timeout(5000).emit('action', action, (err: Error | null, response: Reply) => {
       setBusy(false);
       if (err || !response?.ok) {
         lockedQuestion.current = null;
+        if (action.type === 'answer') setPendingAnswer(null);
         setError(
           err
             ? 'The request could not be confirmed. Reconnecting will restore your game.'
@@ -191,7 +197,7 @@ function App() {
   const question = room?.question;
   const currentPlayer = room?.players.find((player) => player.id === me?.id);
   const opponent = room?.players.find((player) => player.id !== me?.id);
-  const timeLeft = question ? Math.max(0, question.deadline - now) : 0;
+  const expired = useExpired(question?.deadline, offset);
   const closeDialog = () => {
     setLeaveConfirm(false);
   };
@@ -482,13 +488,12 @@ function App() {
                       ? 'Player disconnected. Reconnecting…'
                       : 'Opponent disconnected. Waiting for reconnection…'}{' '}
                     <strong>
-                      {Math.max(
-                        0,
-                        Math.ceil(
-                          ((room.players.find((p) => !p.connected)?.reconnectUntil ?? now) - now) /
-                            1000,
-                        ),
-                      )}
+                      <Countdown
+                        deadline={
+                          room.players.find((p) => !p.connected)?.reconnectUntil ?? undefined
+                        }
+                        offset={offset}
+                      />
                       s
                     </strong>
                     <small>Question timers continue while disconnected.</small>
@@ -687,7 +692,11 @@ function App() {
                         ) : (
                           <>
                             <div className="countdown" aria-live="polite">
-                              {Math.max(1, Math.ceil(((room.introEndsAt ?? now) - now) / 1000))}
+                              <Countdown
+                                deadline={room.introEndsAt ?? undefined}
+                                offset={offset}
+                                minimum={1}
+                              />
                             </div>
                           </>
                         )}
@@ -698,7 +707,7 @@ function App() {
                           key={question.id}
                           room={room}
                           meId={me!.id}
-                          now={now}
+                          offset={offset}
                           connected={connected}
                           busy={busy}
                           send={send}
@@ -707,31 +716,7 @@ function App() {
                     ) : (
                       question && (
                         <>
-                          <div className="question-top" data-question-id={question.id}>
-                            <span className="eyebrow">
-                              QUESTION <strong>{String(question.number).padStart(2, '0')}</strong> /
-                              10
-                            </span>
-                            <div
-                              className={`timer ${timeLeft <= 3000 && !feedback ? 'urgent' : ''}`}
-                              role="timer"
-                              aria-label={`${Math.ceil(timeLeft / 1000)} seconds remaining`}
-                            >
-                              <Clock3 size={19} />
-                              <strong>
-                                {feedback
-                                  ? (feedback.responseMs / 1000).toFixed(1)
-                                  : (timeLeft / 1000).toFixed(1)}
-                              </strong>
-                              <span>s</span>
-                            </div>
-                          </div>
-                          <div className="timer-track">
-                            <div
-                              className={timeLeft <= 3000 ? 'urgent' : ''}
-                              style={{ width: `${feedback ? 0 : (timeLeft / QUESTION_MS) * 100}%` }}
-                            />
-                          </div>
+                          <QuestionClock question={question} offset={offset} feedback={feedback} />
                           <div
                             className={`question-visual ${room.phase === 2 ? 'capital-visual' : ''}`}
                           >
@@ -761,8 +746,10 @@ function App() {
                               return (
                                 <button
                                   key={option.id}
-                                  className={`answer ${hoveredAnswerId === option.id ? 'pointer-hovered' : ''} ${correct ? 'correct' : ''} ${wrong ? 'incorrect' : ''}`}
-                                  disabled={!!feedback || busy || !connected || timeLeft <= 0}
+                                  className={`answer ${hoveredAnswerId === option.id ? 'pointer-hovered' : ''} ${correct ? 'correct' : ''} ${wrong ? 'incorrect' : ''} ${pendingAnswer?.questionId === question.id && pendingAnswer.optionId === option.id ? 'pending' : ''}`}
+                                  disabled={
+                                    !!feedback || busy || !!pendingAnswer || !connected || expired
+                                  }
                                   // Option IDs are unique per question. Require fresh mouse movement
                                   // so a stationary cursor or touch cannot highlight the next answer.
                                   onPointerMove={(event) => {
@@ -770,6 +757,10 @@ function App() {
                                       setHoveredAnswerId(option.id);
                                   }}
                                   onPointerLeave={() => setHoveredAnswerId(null)}
+                                  aria-busy={
+                                    pendingAnswer?.questionId === question.id &&
+                                    pendingAnswer.optionId === option.id
+                                  }
                                   onClick={() =>
                                     send({
                                       type: 'answer',
@@ -816,20 +807,6 @@ function App() {
           </>
         )}
       </main>
-      <footer className="map-attribution">
-        Map data: Natural Earth · geoBoundaries ·{' '}
-        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
-          © OpenStreetMap contributors
-        </a>
-        {' · '}
-        <a href="/map-data-license" target="_blank" rel="noreferrer">
-          ODbL
-        </a>
-        {' · '}
-        <a href="/map-data.geojson" target="_blank" rel="noreferrer">
-          Download map data
-        </a>
-      </footer>
       <dialog
         aria-labelledby="dialog-title"
         ref={dialog}

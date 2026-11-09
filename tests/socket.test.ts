@@ -138,3 +138,78 @@ test('real sockets validate guests, broadcast rooms, reject a third player, conc
     await server.close();
   }
 });
+
+test('answers update their room without resending unchanged states to other games or the lobby', async () => {
+  const server = createApp();
+  await new Promise<void>((resolve) => server.http.listen(0, '127.0.0.1', resolve));
+  const url = `http://127.0.0.1:${(server.http.address() as AddressInfo).port}`;
+  const sockets: Socket[] = [];
+  const connect = async (name: string) => {
+    const socket = io(url, {
+      auth: { name },
+      forceNew: true,
+      reconnection: false,
+      autoConnect: false,
+    });
+    sockets.push(socket);
+    const ready = until(socket, () => true);
+    socket.connect();
+    const state = await ready;
+    return { socket, id: state.me.id };
+  };
+  try {
+    const a = await connect('First');
+    const b = await connect('Second');
+    const lobby = await connect('Lobby');
+    const aQuestion = until(a.socket, (s) => !!s.room?.question);
+    await action(a.socket, { type: 'solo' });
+    const bQuestion = until(b.socket, (s) => !!s.room?.question);
+    await action(b.socket, { type: 'solo' });
+    const [first] = await Promise.all([aQuestion, bQuestion]);
+    let otherUpdates = 0;
+    let lobbyUpdates = 0;
+    b.socket.on('snapshot', () => otherUpdates++);
+    lobby.socket.on('snapshot', () => lobbyUpdates++);
+    const question = first.room!.question!;
+    const feedback = until(a.socket, (s) => !!s.room?.feedback);
+    assert.deepEqual(
+      await action(a.socket, {
+        type: 'answer',
+        questionId: question.id,
+        optionId: question.options[0].id,
+      }),
+      { ok: true },
+    );
+    assert.equal((await feedback).room!.feedback!.selectedId, question.options[0].id);
+    const next = await until(
+      a.socket,
+      (s) => !!s.room?.question && s.room.question.id !== question.id,
+    );
+    assert.equal(next.room!.question!.number, 2);
+    assert.equal(
+      otherUpdates,
+      0,
+      'another solo game must not receive the answer or feedback-expiration updates',
+    );
+    assert.equal(lobbyUpdates, 0, 'unchanged lobby must not receive game updates');
+
+    // A late answer mutates the authoritative state even though its acknowledgement is an error.
+    const current = next.room!.question!;
+    server.engine.player(a.id).startedAt = Date.now() - 10_001;
+    const timeout = until(a.socket, (s) => s.room?.feedback?.timeout === true);
+    assert.equal(
+      (
+        await action(a.socket, {
+          type: 'answer',
+          questionId: current.id,
+          optionId: current.options[0].id,
+        })
+      ).ok,
+      false,
+    );
+    assert.equal((await timeout).room!.feedback!.timeout, true);
+  } finally {
+    for (const socket of sockets) socket.disconnect();
+    await server.close();
+  }
+});

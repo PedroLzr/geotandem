@@ -1,10 +1,11 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Check, Clock3, Crosshair, MapPin, Minus, Plus, RotateCcw } from 'lucide-react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState, type RefObject } from 'react';
+import { Check, Crosshair, MapPin, Minus, Plus, RotateCcw } from 'lucide-react';
 import { geoEquirectangular, geoPath } from 'd3-geo';
 import type { FeatureCollection, MultiPolygon, Polygon } from 'geojson';
 import world from '../../data/location-map.json';
-import { LOCATION_MS, type Action, type Coordinates, type RoomView } from '../../shared/types';
+import { type Action, type Coordinates, type RoomView } from '../../shared/types';
 import './location.css';
+import { Countdown, QuestionClock, useExpired } from './QuestionClock';
 
 const projection = geoEquirectangular()
   .scale(1000 / (2 * Math.PI))
@@ -48,14 +49,14 @@ function svgPoint(svg: SVGSVGElement, x: number, y: number): Coordinates {
 export default function LocationRound({
   room,
   meId,
-  now,
+  offset,
   connected,
   busy,
   send,
 }: {
   room: RoomView;
   meId: string;
-  now: number;
+  offset: RefObject<number>;
   connected: boolean;
   busy: boolean;
   send: (action: Action) => void;
@@ -68,11 +69,11 @@ export default function LocationRound({
   const svg = useRef<SVGSVGElement>(null);
   const pointers = useRef(new Map<number, Coordinates>());
   const gesture = useRef({ start: [0, 0] as Coordinates, moved: false });
-  const timeLeft = Math.max(0, question.deadline - now);
+  const expired = useExpired(question.deadline, offset);
   const revealed = location.reveal;
   const countryId = revealed?.countryId;
   const revealUntil = revealed?.until;
-  const locked = location.confirmed || !!revealed || timeLeft === 0 || !connected;
+  const locked = location.confirmed || !!revealed || expired || !connected;
   const ownResult = revealed?.guesses.find((g) => g.playerId === meId);
   const selected = locked ? location.draft : draft;
   const choose = useCallback(
@@ -175,23 +176,7 @@ export default function LocationRound({
   });
   return (
     <div className="location-round" data-question-id={question.id}>
-      <div className="question-top">
-        <span className="eyebrow">
-          LOCATION <strong>{String(question.number).padStart(2, '0')}</strong> / 10
-        </span>
-        <div
-          className={`timer ${timeLeft <= 3000 && !revealed ? 'urgent' : ''}`}
-          role="timer"
-          aria-label={`${Math.ceil(timeLeft / 1000)} seconds remaining`}
-        >
-          <Clock3 size={18} />
-          <strong>{revealed ? '✓' : Math.ceil(timeLeft / 1000)}</strong>
-          {!revealed && <span>s</span>}
-        </div>
-      </div>
-      <div className="timer-track">
-        <div style={{ width: `${revealed ? 0 : (timeLeft / LOCATION_MS) * 100}%` }} />
-      </div>
+      <QuestionClock question={question} offset={offset} revealed={!!revealed} />
       <h1 className="question-prompt">{question.prompt}</h1>
       <div className="location-map">
         <svg
@@ -390,7 +375,7 @@ export default function LocationRound({
           <span className="location-country-key">
             <i />
             {question.prompt.replace(/^Locate /, '')} highlighted · Next round in{' '}
-            {Math.max(1, Math.ceil((revealed.until - now) / 1000))}s
+            <Countdown deadline={revealed.until} offset={offset} minimum={1} />s
           </span>
         </div>
       ) : (

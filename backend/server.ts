@@ -101,8 +101,17 @@ export function createApp() {
     },
   });
   const active = new Map<string, string>();
-  const broadcast = () => {
-    for (const [id, socketId] of active) io.to(socketId).emit('snapshot', engine.snapshot(id));
+  const lastSnapshots = new Map<string, string>();
+  const broadcast = (roomId?: string | null) => {
+    for (const [id, socketId] of active) {
+      if (roomId !== undefined && engine.player(id).roomId !== roomId) continue;
+      const snapshot = engine.snapshot(id);
+      // Server time is synchronized separately; it must not cause redundant updates.
+      const content = JSON.stringify({ ...snapshot, serverNow: 0 });
+      if (lastSnapshots.get(id) === content) continue;
+      lastSnapshots.set(id, content);
+      io.to(socketId).emit('snapshot', snapshot);
+    }
   };
   io.use((socket, next) => {
     const parsed = guestSchema.safeParse(socket.handshake.auth);
@@ -119,6 +128,7 @@ export function createApp() {
     const id: string = socket.data.playerId;
     const previous = active.get(id);
     active.set(id, socket.id);
+    lastSnapshots.delete(id);
     if (previous) {
       io.to(previous).emit('replaced');
       io.sockets.sockets.get(previous)?.disconnect(true);
@@ -167,6 +177,7 @@ export function createApp() {
           case 'exit':
             engine.exit(id);
             active.delete(id);
+            lastSnapshots.delete(id);
             reply({ ok: true });
             socket.disconnect(true);
             broadcast();
@@ -192,11 +203,13 @@ export function createApp() {
           error: error instanceof Error ? error.message : 'Unable to process your request.',
         });
       }
-      broadcast();
+      const localAction = ['answer', 'locate', 'confirm-location'].includes(parsed.data.type);
+      broadcast(localAction ? engine.player(id).roomId : undefined);
     });
     socket.on('disconnect', () => {
       if (active.get(id) !== socket.id) return;
       active.delete(id);
+      lastSnapshots.delete(id);
       engine.disconnect(id);
       broadcast();
     });
