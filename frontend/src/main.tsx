@@ -816,6 +816,20 @@ function App() {
           </>
         )}
       </main>
+      <footer className="map-attribution">
+        Map data: Natural Earth · geoBoundaries ·{' '}
+        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
+          © OpenStreetMap contributors
+        </a>
+        {' · '}
+        <a href="/map-data-license" target="_blank" rel="noreferrer">
+          ODbL
+        </a>
+        {' · '}
+        <a href="/map-data.geojson" target="_blank" rel="noreferrer">
+          Download map data
+        </a>
+      </footer>
       <dialog
         aria-labelledby="dialog-title"
         ref={dialog}

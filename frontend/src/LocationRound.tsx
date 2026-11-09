@@ -9,7 +9,7 @@ import './location.css';
 const projection = geoEquirectangular()
   .scale(1000 / (2 * Math.PI))
   .translate([500, 300]);
-const path = geoPath(projection);
+const path = geoPath(projection).digits(6);
 const features = (world as FeatureCollection<Polygon | MultiPolygon>).features;
 const outlines = features.map((f) => ({ id: String(f.id), path: path(f) ?? '' }));
 const World = memo(function World({ countryId }: { countryId?: string }) {
@@ -27,6 +27,7 @@ const World = memo(function World({ countryId }: { countryId?: string }) {
   );
 });
 type View = { x: number; y: number; k: number };
+const MAX_ZOOM = 16384;
 const initialView: View = { x: 0, y: 0, k: 1 };
 function bound(v: View): View {
   return {
@@ -36,7 +37,7 @@ function bound(v: View): View {
   };
 }
 function zoom(v: View, factor: number, x = 500, y = 300): View {
-  const k = Math.max(1, Math.min(16, v.k * factor));
+  const k = Math.max(1, Math.min(MAX_ZOOM, v.k * factor));
   return bound({ k, x: x - ((x - v.x) * k) / v.k, y: y - ((y - v.y) * k) / v.k });
 }
 function svgPoint(svg: SVGSVGElement, x: number, y: number): Coordinates {
@@ -86,7 +87,7 @@ export default function LocationRound({
     if (!countryId) return initialView;
     const country = features.find((f) => f.id === countryId)!;
     const [[x0, y0], [x1, y1]] = path.bounds(country);
-    const k = Math.max(1, Math.min(10, 0.7 / Math.max((x1 - x0) / 1000, (y1 - y0) / 600)));
+    const k = Math.max(1, Math.min(MAX_ZOOM, 0.7 / Math.max((x1 - x0) / 1000, (y1 - y0) / 600)));
     return bound({ k, x: 500 - ((x0 + x1) / 2) * k, y: 300 - ((y0 + y1) / 2) * k });
   }, [countryId]);
   const revealPoints =
@@ -109,7 +110,7 @@ export default function LocationRound({
       y0 = Math.min(y0, y);
       y1 = Math.max(y1, y);
     }
-    const k = Math.max(1, Math.min(10, 0.7 / Math.max((x1 - x0) / 1000, (y1 - y0) / 600)));
+    const k = Math.max(1, Math.min(MAX_ZOOM, 0.7 / Math.max((x1 - x0) / 1000, (y1 - y0) / 600)));
     return bound({ k, x: 500 - ((x0 + x1) / 2) * k, y: 300 - ((y0 + y1) / 2) * k });
   }, [countryId, revealPoints]);
   useEffect(() => {
@@ -262,7 +263,7 @@ export default function LocationRound({
             if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
               e.preventDefault();
               const point = selected ?? [0, 0];
-              const step = e.shiftKey ? 5 : 1;
+              const step = (e.shiftKey ? 5 : 1) / view.k;
               choose([
                 Math.max(
                   -180,

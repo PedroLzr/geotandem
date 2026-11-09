@@ -37,6 +37,14 @@ test('real sockets validate guests, broadcast rooms, reject a third player, conc
     return s;
   };
   try {
+    const mapResponse = await fetch(`${url}/map-data.geojson`);
+    assert.equal(mapResponse.status, 200);
+    const map = (await mapResponse.json()) as { features: { id: string }[] };
+    assert.ok(map.features.some((f) => f.id === '492'));
+    assert.ok(map.features.some((f) => f.id === '336'));
+    const licenseResponse = await fetch(`${url}/map-data-license`);
+    assert.equal(licenseResponse.status, 200);
+    assert.match(await licenseResponse.text(), /Open Database License/);
     const invalid = connect('<script>');
     const invalidError = new Promise<Error>((resolve) => invalid.once('connect_error', resolve));
     invalid.connect();

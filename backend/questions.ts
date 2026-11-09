@@ -2,7 +2,6 @@ import { randomInt, randomUUID } from 'node:crypto';
 import countries from '../data/countries.json';
 import assetsJson from '../data/assets.json';
 import type { Option } from '../shared/types';
-import { locationCountries } from './geography';
 export interface Question {
   kind?: 'location';
   id: string;
@@ -21,54 +20,65 @@ export function shuffle<T>(items: T[]): T[] {
   }
   return result;
 }
+export type Phase = 0 | 1 | 2 | 3;
+export type Country = (typeof countries)[number];
+
+// One catalog for every phase and every game mode: no eligibility exclusions.
+export function questionForCountry(country: Country, phase: Phase): Question {
+  if (phase === 3) {
+    return {
+      id: randomUUID(),
+      kind: 'location',
+      country: country.code,
+      prompt: `Locate ${country.name}`,
+      options: [],
+      correctOptionId: '',
+    };
+  }
+  const label = (c: Country) => (phase === 2 ? c.capital : c.name);
+  const others = countries.filter((c) => c.code !== country.code && label(c) !== label(country));
+  const candidates = [
+    ...shuffle(others.filter((c) => c.region === country.region)),
+    ...shuffle(others.filter((c) => c.region !== country.region)),
+  ];
+  // Distinct labels avoid two indistinguishable answers if capital names coincide.
+  const seen = new Set<string>();
+  const distractors = candidates
+    .filter((c) => {
+      if (seen.has(label(c))) return false;
+      seen.add(label(c));
+      return true;
+    })
+    .slice(0, 5);
+  if (distractors.length !== 5) throw new Error(`Not enough distinct answers: ${country.code}`);
+  const answers = shuffle([country, ...distractors]);
+  const options = answers.map((c) => ({ id: randomUUID(), text: label(c) }));
+  const raw =
+    phase === 0
+      ? assets[country.code]?.shape
+      : phase === 1
+        ? assets[country.code]?.flag
+        : undefined;
+  if (phase < 2 && !raw) throw new Error(`Missing visual: ${country.code}`);
+  return {
+    id: randomUUID(),
+    country: country.code,
+    prompt:
+      phase === 2
+        ? country.capitalQuestion
+        : phase === 0
+          ? 'What country is this?'
+          : 'Which country does this flag belong to?',
+    visual: raw ? `data:image/svg+xml;base64,${Buffer.from(raw).toString('base64')}` : undefined,
+    options,
+    correctOptionId: options[answers.indexOf(country)].id,
+  };
+}
+
 export function generateQuestions(): Question[][] {
-  const phases: Question[][] = [0, 1, 2].map((phase) => {
-    const pool = countries.filter((c) =>
-      phase === 0 ? c.shapeEligible : phase === 1 ? c.flagEligible : c.capitalEligible,
-    );
-    return shuffle(pool)
+  return ([0, 1, 2, 3] as const).map((phase) =>
+    shuffle(countries)
       .slice(0, 10)
-      .map((country) => {
-        const others = pool.filter((c) => c.code !== country.code);
-        const distractors = [
-          ...shuffle(others.filter((c) => c.region === country.region)),
-          ...shuffle(others.filter((c) => c.region !== country.region)),
-        ].slice(0, 5);
-        const answers = shuffle([country, ...distractors]);
-        const options = answers.map((c) => ({
-          id: randomUUID(),
-          text: phase === 2 ? c.capital : c.name,
-        }));
-        const raw = phase === 0 ? assets[country.code].shape : assets[country.code].flag;
-        return {
-          id: randomUUID(),
-          country: country.code,
-          prompt:
-            phase === 2
-              ? `What is the capital of ${country.name}?`
-              : phase === 0
-                ? 'What country is this?'
-                : 'Which country does this flag belong to?',
-          visual:
-            phase < 2
-              ? `data:image/svg+xml;base64,${Buffer.from(raw).toString('base64')}`
-              : undefined,
-          options,
-          correctOptionId: options[answers.indexOf(country)].id,
-        };
-      });
-  });
-  phases.push(
-    shuffle(locationCountries)
-      .slice(0, 10)
-      .map((country) => ({
-        id: randomUUID(),
-        kind: 'location',
-        country: country.code,
-        prompt: `Locate ${country.name}`,
-        options: [],
-        correctOptionId: '',
-      })),
+      .map((country) => questionForCountry(country, phase)),
   );
-  return phases;
 }

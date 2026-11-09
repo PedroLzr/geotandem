@@ -1,8 +1,8 @@
 # GeoTandem
 
-GeoTandem es un juego de geografía en tiempo real para **una o dos personas**. Juega en solitario o compite identificando siluetas de países, banderas y capitales.
+GeoTandem es un juego de geografía en tiempo real para **una persona, dos jugadores o grupos de hasta ocho**. Juega en solitario o compite identificando siluetas de países, banderas, capitales y ubicaciones.
 
-Se juega desde el navegador, sin cuentas ni base de datos. La interfaz y las preguntas están en inglés. Incluye datos de 80 países y funciona en ordenador y móvil.
+Se juega desde el navegador, sin cuentas ni base de datos. La interfaz y las preguntas están en inglés. Incluye datos de 200 países y funciona en ordenador y móvil.
 
 ## Inicio rápido con Docker
 
@@ -90,3 +90,19 @@ compose.yml          Configuración del servicio Docker
 - Para publicarlo en Internet, usa HTTPS y un proxy que conserve la cabecera `Host` y permita conexiones WebSocket. Configura `ALLOWED_ORIGINS` si hace falta. El servidor no usa las cabeceras de IP reenviada; detrás de un proxy, los límites por IP pueden afectar a varios jugadores a la vez.
 - Puedes comprobar que el servidor responde abriendo `/health`, por ejemplo `http://localhost:3039/health`. Debe devolver `{"status":"ok"}`.
 - La interfaz se adapta a pantallas desde 320 píxeles y permite usar el teclado. Las preguntas de siluetas y banderas requieren reconocimiento visual.
+
+### Marruecos y Sáhara Occidental
+
+El juego incluye Marruecos (MA) y Sáhara Occidental (EH) como países separados en siluetas, banderas, capitales y ubicación, tanto en Solo como en Duelo y Arena. Sáhara Occidental utiliza su territorio completo, su bandera y Laayoune (El Aaiún) como respuesta de capital. Marruecos queda al norte de la frontera de 27°40′ N.
+
+`scripts/country-features.ts` aplica esta separación a los datos de world-atlas antes de generar las siluetas, el mapa de ubicación y el globo de portada. Así se elimina la división interna por control territorial del proveedor. `npm run data:build` regenera todos estos recursos sin perder la corrección.
+
+### Cobertura mundial en las cuatro fases
+
+El catálogo incluye 200 países: los 193 miembros de la ONU, los dos Estados observadores (Ciudad del Vaticano y Palestina), Sáhara Occidental, Kosovo, Taiwán, Islas Cook y Niue. Todos pueden salir en siluetas, banderas, capitales y ubicación, en Solo, Duelo y Arena. Los territorios dependientes no se cuentan como países adicionales. Cada partida sigue teniendo 10 preguntas por fase, seleccionadas al azar; no muestra los 200 países en una sola partida.
+
+No hay indicadores de elegibilidad que excluyan países. La generación falla si falta una figura, bandera o geometría, en vez de ocultar ese país. Las preguntas de capital precisan el papel de la ciudad cuando es necesario: ciudad federal de Suiza, capital administrativa de Sudáfrica o distrito sede del Gobierno de Nauru, por ejemplo.
+
+Las geometrías conservan todas sus islas y componentes. Para países muy dispersos, la silueta combina un detalle ampliado con una vista del país completo. El mapa permite ampliar hasta 16.384× para seleccionar microestados; el movimiento del marcador con las flechas se ajusta al zoom. La geometría de ubicación y la puntuación usan las mismas coordenadas, conservadas con seis decimales.
+
+Los países pequeños y Tuvalu cuentan con geometrías suplementarias de Natural Earth a escala 1:10m; el Vaticano y Mónaco usan contornos específicos de geoBoundaries. Las fuentes, el criterio del catálogo y las convenciones de capitales se documentan en `data/SOURCES.md`.

@@ -1,4 +1,5 @@
 import express from 'express';
+import mapData from '../data/location-map.json';
 import helmet from 'helmet';
 import { createServer } from 'node:http';
 import { resolve } from 'node:path';
@@ -59,6 +60,10 @@ export function createApp() {
       },
       strictTransportSecurity: process.env.NODE_ENV === 'production' ? undefined : false,
     }),
+  );
+  app.get('/map-data.geojson', (_req, res) => res.type('application/geo+json').json(mapData));
+  app.get('/map-data-license', (_req, res) =>
+    res.type('text/plain').sendFile(resolve('licenses/odbl.txt')),
   );
   app.get('/health', (_req, res) => res.json({ status: 'ok' }));
   app.use(express.static(resolve('dist/public')));

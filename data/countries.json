@@ -1,729 +1,21 @@
 [
   {
+    "code": "AF",
+    "alpha3": "AFG",
+    "numeric": "004",
+    "name": "Afghanistan",
+    "capital": "Kabul",
+    "capitalQuestion": "What is the capital of Afghanistan?",
+    "region": "Asia"
+  },
+  {
     "code": "AL",
     "alpha3": "ALB",
     "numeric": "008",
     "name": "Albania",
     "capital": "Tirana",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "AT",
-    "alpha3": "AUT",
-    "numeric": "040",
-    "name": "Austria",
-    "capital": "Vienna",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "BE",
-    "alpha3": "BEL",
-    "numeric": "056",
-    "name": "Belgium",
-    "capital": "Brussels",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "BG",
-    "alpha3": "BGR",
-    "numeric": "100",
-    "name": "Bulgaria",
-    "capital": "Sofia",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "HR",
-    "alpha3": "HRV",
-    "numeric": "191",
-    "name": "Croatia",
-    "capital": "Zagreb",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "CZ",
-    "alpha3": "CZE",
-    "numeric": "203",
-    "name": "Czechia",
-    "capital": "Prague",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "DK",
-    "alpha3": "DNK",
-    "numeric": "208",
-    "name": "Denmark",
-    "capital": "Copenhagen",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "EE",
-    "alpha3": "EST",
-    "numeric": "233",
-    "name": "Estonia",
-    "capital": "Tallinn",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "FI",
-    "alpha3": "FIN",
-    "numeric": "246",
-    "name": "Finland",
-    "capital": "Helsinki",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "FR",
-    "alpha3": "FRA",
-    "numeric": "250",
-    "name": "France",
-    "capital": "Paris",
-    "region": "Europe",
-    "shapeEligible": false,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "DE",
-    "alpha3": "DEU",
-    "numeric": "276",
-    "name": "Germany",
-    "capital": "Berlin",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "GR",
-    "alpha3": "GRC",
-    "numeric": "300",
-    "name": "Greece",
-    "capital": "Athens",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "HU",
-    "alpha3": "HUN",
-    "numeric": "348",
-    "name": "Hungary",
-    "capital": "Budapest",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "IS",
-    "alpha3": "ISL",
-    "numeric": "352",
-    "name": "Iceland",
-    "capital": "Reykjavik",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "IE",
-    "alpha3": "IRL",
-    "numeric": "372",
-    "name": "Ireland",
-    "capital": "Dublin",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "IT",
-    "alpha3": "ITA",
-    "numeric": "380",
-    "name": "Italy",
-    "capital": "Rome",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "LV",
-    "alpha3": "LVA",
-    "numeric": "428",
-    "name": "Latvia",
-    "capital": "Riga",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "LT",
-    "alpha3": "LTU",
-    "numeric": "440",
-    "name": "Lithuania",
-    "capital": "Vilnius",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "NO",
-    "alpha3": "NOR",
-    "numeric": "578",
-    "name": "Norway",
-    "capital": "Oslo",
-    "region": "Europe",
-    "shapeEligible": false,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "PL",
-    "alpha3": "POL",
-    "numeric": "616",
-    "name": "Poland",
-    "capital": "Warsaw",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "PT",
-    "alpha3": "PRT",
-    "numeric": "620",
-    "name": "Portugal",
-    "capital": "Lisbon",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "RO",
-    "alpha3": "ROU",
-    "numeric": "642",
-    "name": "Romania",
-    "capital": "Bucharest",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "RS",
-    "alpha3": "SRB",
-    "numeric": "688",
-    "name": "Serbia",
-    "capital": "Belgrade",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "SK",
-    "alpha3": "SVK",
-    "numeric": "703",
-    "name": "Slovakia",
-    "capital": "Bratislava",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "SI",
-    "alpha3": "SVN",
-    "numeric": "705",
-    "name": "Slovenia",
-    "capital": "Ljubljana",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "ES",
-    "alpha3": "ESP",
-    "numeric": "724",
-    "name": "Spain",
-    "capital": "Madrid",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "SE",
-    "alpha3": "SWE",
-    "numeric": "752",
-    "name": "Sweden",
-    "capital": "Stockholm",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "CH",
-    "alpha3": "CHE",
-    "numeric": "756",
-    "name": "Switzerland",
-    "capital": "Bern",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": false
-  },
-  {
-    "code": "GB",
-    "alpha3": "GBR",
-    "numeric": "826",
-    "name": "United Kingdom",
-    "capital": "London",
-    "region": "Europe",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "CA",
-    "alpha3": "CAN",
-    "numeric": "124",
-    "name": "Canada",
-    "capital": "Ottawa",
-    "region": "Americas",
-    "shapeEligible": false,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "US",
-    "alpha3": "USA",
-    "numeric": "840",
-    "name": "United States",
-    "capital": "Washington, D.C.",
-    "region": "Americas",
-    "shapeEligible": false,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "MX",
-    "alpha3": "MEX",
-    "numeric": "484",
-    "name": "Mexico",
-    "capital": "Mexico City",
-    "region": "Americas",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "CR",
-    "alpha3": "CRI",
-    "numeric": "188",
-    "name": "Costa Rica",
-    "capital": "San Jose",
-    "region": "Americas",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "CU",
-    "alpha3": "CUB",
-    "numeric": "192",
-    "name": "Cuba",
-    "capital": "Havana",
-    "region": "Americas",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "DO",
-    "alpha3": "DOM",
-    "numeric": "214",
-    "name": "Dominican Republic",
-    "capital": "Santo Domingo",
-    "region": "Americas",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "GT",
-    "alpha3": "GTM",
-    "numeric": "320",
-    "name": "Guatemala",
-    "capital": "Guatemala City",
-    "region": "Americas",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "PA",
-    "alpha3": "PAN",
-    "numeric": "591",
-    "name": "Panama",
-    "capital": "Panama City",
-    "region": "Americas",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "AR",
-    "alpha3": "ARG",
-    "numeric": "032",
-    "name": "Argentina",
-    "capital": "Buenos Aires",
-    "region": "Americas",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "BR",
-    "alpha3": "BRA",
-    "numeric": "076",
-    "name": "Brazil",
-    "capital": "Brasilia",
-    "region": "Americas",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "CL",
-    "alpha3": "CHL",
-    "numeric": "152",
-    "name": "Chile",
-    "capital": "Santiago",
-    "region": "Americas",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "CO",
-    "alpha3": "COL",
-    "numeric": "170",
-    "name": "Colombia",
-    "capital": "Bogota",
-    "region": "Americas",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "EC",
-    "alpha3": "ECU",
-    "numeric": "218",
-    "name": "Ecuador",
-    "capital": "Quito",
-    "region": "Americas",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "PY",
-    "alpha3": "PRY",
-    "numeric": "600",
-    "name": "Paraguay",
-    "capital": "Asuncion",
-    "region": "Americas",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "PE",
-    "alpha3": "PER",
-    "numeric": "604",
-    "name": "Peru",
-    "capital": "Lima",
-    "region": "Americas",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "UY",
-    "alpha3": "URY",
-    "numeric": "858",
-    "name": "Uruguay",
-    "capital": "Montevideo",
-    "region": "Americas",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "VE",
-    "alpha3": "VEN",
-    "numeric": "862",
-    "name": "Venezuela",
-    "capital": "Caracas",
-    "region": "Americas",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "AU",
-    "alpha3": "AUS",
-    "numeric": "036",
-    "name": "Australia",
-    "capital": "Canberra",
-    "region": "Oceania",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "NZ",
-    "alpha3": "NZL",
-    "numeric": "554",
-    "name": "New Zealand",
-    "capital": "Wellington",
-    "region": "Oceania",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "JP",
-    "alpha3": "JPN",
-    "numeric": "392",
-    "name": "Japan",
-    "capital": "Tokyo",
-    "region": "Asia",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "KR",
-    "alpha3": "KOR",
-    "numeric": "410",
-    "name": "South Korea",
-    "capital": "Seoul",
-    "region": "Asia",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "CN",
-    "alpha3": "CHN",
-    "numeric": "156",
-    "name": "China",
-    "capital": "Beijing",
-    "region": "Asia",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "IN",
-    "alpha3": "IND",
-    "numeric": "356",
-    "name": "India",
-    "capital": "New Delhi",
-    "region": "Asia",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "PK",
-    "alpha3": "PAK",
-    "numeric": "586",
-    "name": "Pakistan",
-    "capital": "Islamabad",
-    "region": "Asia",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "BD",
-    "alpha3": "BGD",
-    "numeric": "050",
-    "name": "Bangladesh",
-    "capital": "Dhaka",
-    "region": "Asia",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "NP",
-    "alpha3": "NPL",
-    "numeric": "524",
-    "name": "Nepal",
-    "capital": "Kathmandu",
-    "region": "Asia",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "TH",
-    "alpha3": "THA",
-    "numeric": "764",
-    "name": "Thailand",
-    "capital": "Bangkok",
-    "region": "Asia",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "VN",
-    "alpha3": "VNM",
-    "numeric": "704",
-    "name": "Vietnam",
-    "capital": "Hanoi",
-    "region": "Asia",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "KH",
-    "alpha3": "KHM",
-    "numeric": "116",
-    "name": "Cambodia",
-    "capital": "Phnom Penh",
-    "region": "Asia",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "MY",
-    "alpha3": "MYS",
-    "numeric": "458",
-    "name": "Malaysia",
-    "capital": "Kuala Lumpur",
-    "region": "Asia",
-    "shapeEligible": false,
-    "flagEligible": true,
-    "capitalEligible": false
-  },
-  {
-    "code": "PH",
-    "alpha3": "PHL",
-    "numeric": "608",
-    "name": "Philippines",
-    "capital": "Manila",
-    "region": "Asia",
-    "shapeEligible": false,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "MN",
-    "alpha3": "MNG",
-    "numeric": "496",
-    "name": "Mongolia",
-    "capital": "Ulaanbaatar",
-    "region": "Asia",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "KZ",
-    "alpha3": "KAZ",
-    "numeric": "398",
-    "name": "Kazakhstan",
-    "capital": "Astana",
-    "region": "Asia",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "UZ",
-    "alpha3": "UZB",
-    "numeric": "860",
-    "name": "Uzbekistan",
-    "capital": "Tashkent",
-    "region": "Asia",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "EG",
-    "alpha3": "EGY",
-    "numeric": "818",
-    "name": "Egypt",
-    "capital": "Cairo",
-    "region": "Africa",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "MA",
-    "alpha3": "MAR",
-    "numeric": "504",
-    "name": "Morocco",
-    "capital": "Rabat",
-    "region": "Africa",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "TN",
-    "alpha3": "TUN",
-    "numeric": "788",
-    "name": "Tunisia",
-    "capital": "Tunis",
-    "region": "Africa",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
+    "capitalQuestion": "What is the capital of Albania?",
+    "region": "Europe"
   },
   {
     "code": "DZ",
@@ -731,131 +23,17 @@
     "numeric": "012",
     "name": "Algeria",
     "capital": "Algiers",
-    "region": "Africa",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
+    "capitalQuestion": "What is the capital of Algeria?",
+    "region": "Africa"
   },
   {
-    "code": "GH",
-    "alpha3": "GHA",
-    "numeric": "288",
-    "name": "Ghana",
-    "capital": "Accra",
-    "region": "Africa",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "NG",
-    "alpha3": "NGA",
-    "numeric": "566",
-    "name": "Nigeria",
-    "capital": "Abuja",
-    "region": "Africa",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "KE",
-    "alpha3": "KEN",
-    "numeric": "404",
-    "name": "Kenya",
-    "capital": "Nairobi",
-    "region": "Africa",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "ET",
-    "alpha3": "ETH",
-    "numeric": "231",
-    "name": "Ethiopia",
-    "capital": "Addis Ababa",
-    "region": "Africa",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "TZ",
-    "alpha3": "TZA",
-    "numeric": "834",
-    "name": "Tanzania",
-    "capital": "Dodoma",
-    "region": "Africa",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "UG",
-    "alpha3": "UGA",
-    "numeric": "800",
-    "name": "Uganda",
-    "capital": "Kampala",
-    "region": "Africa",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "ZM",
-    "alpha3": "ZMB",
-    "numeric": "894",
-    "name": "Zambia",
-    "capital": "Lusaka",
-    "region": "Africa",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "ZW",
-    "alpha3": "ZWE",
-    "numeric": "716",
-    "name": "Zimbabwe",
-    "capital": "Harare",
-    "region": "Africa",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "MG",
-    "alpha3": "MDG",
-    "numeric": "450",
-    "name": "Madagascar",
-    "capital": "Antananarivo",
-    "region": "Africa",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "SN",
-    "alpha3": "SEN",
-    "numeric": "686",
-    "name": "Senegal",
-    "capital": "Dakar",
-    "region": "Africa",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
-  },
-  {
-    "code": "CM",
-    "alpha3": "CMR",
-    "numeric": "120",
-    "name": "Cameroon",
-    "capital": "Yaounde",
-    "region": "Africa",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
+    "code": "AD",
+    "alpha3": "AND",
+    "numeric": "020",
+    "name": "Andorra",
+    "capital": "Andorra la Vella",
+    "capitalQuestion": "What is the capital of Andorra?",
+    "region": "Europe"
   },
   {
     "code": "AO",
@@ -863,10 +41,1016 @@
     "numeric": "024",
     "name": "Angola",
     "capital": "Luanda",
-    "region": "Africa",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
+    "capitalQuestion": "What is the capital of Angola?",
+    "region": "Africa"
+  },
+  {
+    "code": "AG",
+    "alpha3": "ATG",
+    "numeric": "028",
+    "name": "Antigua and Barbuda",
+    "capital": "St. John's",
+    "capitalQuestion": "What is the capital of Antigua and Barbuda?",
+    "region": "Americas"
+  },
+  {
+    "code": "AR",
+    "alpha3": "ARG",
+    "numeric": "032",
+    "name": "Argentina",
+    "capital": "Buenos Aires",
+    "capitalQuestion": "What is the capital of Argentina?",
+    "region": "Americas"
+  },
+  {
+    "code": "AM",
+    "alpha3": "ARM",
+    "numeric": "051",
+    "name": "Armenia",
+    "capital": "Yerevan",
+    "capitalQuestion": "What is the capital of Armenia?",
+    "region": "Asia"
+  },
+  {
+    "code": "AU",
+    "alpha3": "AUS",
+    "numeric": "036",
+    "name": "Australia",
+    "capital": "Canberra",
+    "capitalQuestion": "What is the capital of Australia?",
+    "region": "Oceania"
+  },
+  {
+    "code": "AT",
+    "alpha3": "AUT",
+    "numeric": "040",
+    "name": "Austria",
+    "capital": "Vienna",
+    "capitalQuestion": "What is the capital of Austria?",
+    "region": "Europe"
+  },
+  {
+    "code": "AZ",
+    "alpha3": "AZE",
+    "numeric": "031",
+    "name": "Azerbaijan",
+    "capital": "Baku",
+    "capitalQuestion": "What is the capital of Azerbaijan?",
+    "region": "Asia"
+  },
+  {
+    "code": "BS",
+    "alpha3": "BHS",
+    "numeric": "044",
+    "name": "Bahamas",
+    "capital": "Nassau",
+    "capitalQuestion": "What is the capital of Bahamas?",
+    "region": "Americas"
+  },
+  {
+    "code": "BH",
+    "alpha3": "BHR",
+    "numeric": "048",
+    "name": "Bahrain",
+    "capital": "Manama",
+    "capitalQuestion": "What is the capital of Bahrain?",
+    "region": "Asia"
+  },
+  {
+    "code": "BD",
+    "alpha3": "BGD",
+    "numeric": "050",
+    "name": "Bangladesh",
+    "capital": "Dhaka",
+    "capitalQuestion": "What is the capital of Bangladesh?",
+    "region": "Asia"
+  },
+  {
+    "code": "BB",
+    "alpha3": "BRB",
+    "numeric": "052",
+    "name": "Barbados",
+    "capital": "Bridgetown",
+    "capitalQuestion": "What is the capital of Barbados?",
+    "region": "Americas"
+  },
+  {
+    "code": "BY",
+    "alpha3": "BLR",
+    "numeric": "112",
+    "name": "Belarus",
+    "capital": "Minsk",
+    "capitalQuestion": "What is the capital of Belarus?",
+    "region": "Europe"
+  },
+  {
+    "code": "BE",
+    "alpha3": "BEL",
+    "numeric": "056",
+    "name": "Belgium",
+    "capital": "Brussels",
+    "capitalQuestion": "What is the capital of Belgium?",
+    "region": "Europe"
+  },
+  {
+    "code": "BZ",
+    "alpha3": "BLZ",
+    "numeric": "084",
+    "name": "Belize",
+    "capital": "Belmopan",
+    "capitalQuestion": "What is the capital of Belize?",
+    "region": "Americas"
+  },
+  {
+    "code": "BJ",
+    "alpha3": "BEN",
+    "numeric": "204",
+    "name": "Benin",
+    "capital": "Porto-Novo",
+    "capitalQuestion": "What is the capital of Benin?",
+    "region": "Africa"
+  },
+  {
+    "code": "BT",
+    "alpha3": "BTN",
+    "numeric": "064",
+    "name": "Bhutan",
+    "capital": "Thimphu",
+    "capitalQuestion": "What is the capital of Bhutan?",
+    "region": "Asia"
+  },
+  {
+    "code": "BO",
+    "alpha3": "BOL",
+    "numeric": "068",
+    "name": "Bolivia",
+    "capital": "Sucre",
+    "capitalQuestion": "What is the constitutional capital of Bolivia?",
+    "region": "Americas"
+  },
+  {
+    "code": "BA",
+    "alpha3": "BIH",
+    "numeric": "070",
+    "name": "Bosnia and Herzegovina",
+    "capital": "Sarajevo",
+    "capitalQuestion": "What is the capital of Bosnia and Herzegovina?",
+    "region": "Europe"
+  },
+  {
+    "code": "BW",
+    "alpha3": "BWA",
+    "numeric": "072",
+    "name": "Botswana",
+    "capital": "Gaborone",
+    "capitalQuestion": "What is the capital of Botswana?",
+    "region": "Africa"
+  },
+  {
+    "code": "BR",
+    "alpha3": "BRA",
+    "numeric": "076",
+    "name": "Brazil",
+    "capital": "Brasilia",
+    "capitalQuestion": "What is the capital of Brazil?",
+    "region": "Americas"
+  },
+  {
+    "code": "BN",
+    "alpha3": "BRN",
+    "numeric": "096",
+    "name": "Brunei",
+    "capital": "Bandar Seri Begawan",
+    "capitalQuestion": "What is the capital of Brunei?",
+    "region": "Asia"
+  },
+  {
+    "code": "BG",
+    "alpha3": "BGR",
+    "numeric": "100",
+    "name": "Bulgaria",
+    "capital": "Sofia",
+    "capitalQuestion": "What is the capital of Bulgaria?",
+    "region": "Europe"
+  },
+  {
+    "code": "BF",
+    "alpha3": "BFA",
+    "numeric": "854",
+    "name": "Burkina Faso",
+    "capital": "Ouagadougou",
+    "capitalQuestion": "What is the capital of Burkina Faso?",
+    "region": "Africa"
+  },
+  {
+    "code": "BI",
+    "alpha3": "BDI",
+    "numeric": "108",
+    "name": "Burundi",
+    "capital": "Gitega",
+    "capitalQuestion": "What is the capital of Burundi?",
+    "region": "Africa"
+  },
+  {
+    "code": "KH",
+    "alpha3": "KHM",
+    "numeric": "116",
+    "name": "Cambodia",
+    "capital": "Phnom Penh",
+    "capitalQuestion": "What is the capital of Cambodia?",
+    "region": "Asia"
+  },
+  {
+    "code": "CM",
+    "alpha3": "CMR",
+    "numeric": "120",
+    "name": "Cameroon",
+    "capital": "Yaounde",
+    "capitalQuestion": "What is the capital of Cameroon?",
+    "region": "Africa"
+  },
+  {
+    "code": "CA",
+    "alpha3": "CAN",
+    "numeric": "124",
+    "name": "Canada",
+    "capital": "Ottawa",
+    "capitalQuestion": "What is the capital of Canada?",
+    "region": "Americas"
+  },
+  {
+    "code": "CV",
+    "alpha3": "CPV",
+    "numeric": "132",
+    "name": "Cape Verde",
+    "capital": "Praia",
+    "capitalQuestion": "What is the capital of Cape Verde?",
+    "region": "Africa"
+  },
+  {
+    "code": "CF",
+    "alpha3": "CAF",
+    "numeric": "140",
+    "name": "Central African Republic",
+    "capital": "Bangui",
+    "capitalQuestion": "What is the capital of Central African Republic?",
+    "region": "Africa"
+  },
+  {
+    "code": "TD",
+    "alpha3": "TCD",
+    "numeric": "148",
+    "name": "Chad",
+    "capital": "N'Djamena",
+    "capitalQuestion": "What is the capital of Chad?",
+    "region": "Africa"
+  },
+  {
+    "code": "CL",
+    "alpha3": "CHL",
+    "numeric": "152",
+    "name": "Chile",
+    "capital": "Santiago",
+    "capitalQuestion": "What is the capital of Chile?",
+    "region": "Americas"
+  },
+  {
+    "code": "CN",
+    "alpha3": "CHN",
+    "numeric": "156",
+    "name": "China",
+    "capital": "Beijing",
+    "capitalQuestion": "What is the capital of China?",
+    "region": "Asia"
+  },
+  {
+    "code": "CO",
+    "alpha3": "COL",
+    "numeric": "170",
+    "name": "Colombia",
+    "capital": "Bogota",
+    "capitalQuestion": "What is the capital of Colombia?",
+    "region": "Americas"
+  },
+  {
+    "code": "KM",
+    "alpha3": "COM",
+    "numeric": "174",
+    "name": "Comoros",
+    "capital": "Moroni",
+    "capitalQuestion": "What is the capital of Comoros?",
+    "region": "Africa"
+  },
+  {
+    "code": "CK",
+    "alpha3": "COK",
+    "numeric": "184",
+    "name": "Cook Islands",
+    "capital": "Avarua",
+    "capitalQuestion": "What is the capital of Cook Islands?",
+    "region": "Oceania"
+  },
+  {
+    "code": "CR",
+    "alpha3": "CRI",
+    "numeric": "188",
+    "name": "Costa Rica",
+    "capital": "San Jose",
+    "capitalQuestion": "What is the capital of Costa Rica?",
+    "region": "Americas"
+  },
+  {
+    "code": "HR",
+    "alpha3": "HRV",
+    "numeric": "191",
+    "name": "Croatia",
+    "capital": "Zagreb",
+    "capitalQuestion": "What is the capital of Croatia?",
+    "region": "Europe"
+  },
+  {
+    "code": "CU",
+    "alpha3": "CUB",
+    "numeric": "192",
+    "name": "Cuba",
+    "capital": "Havana",
+    "capitalQuestion": "What is the capital of Cuba?",
+    "region": "Americas"
+  },
+  {
+    "code": "CY",
+    "alpha3": "CYP",
+    "numeric": "196",
+    "name": "Cyprus",
+    "capital": "Nicosia",
+    "capitalQuestion": "What is the capital of Cyprus?",
+    "region": "Asia"
+  },
+  {
+    "code": "CZ",
+    "alpha3": "CZE",
+    "numeric": "203",
+    "name": "Czechia",
+    "capital": "Prague",
+    "capitalQuestion": "What is the capital of Czechia?",
+    "region": "Europe"
+  },
+  {
+    "code": "CI",
+    "alpha3": "CIV",
+    "numeric": "384",
+    "name": "Côte d’Ivoire",
+    "capital": "Yamoussoukro",
+    "capitalQuestion": "What is the capital of Côte d’Ivoire?",
+    "region": "Africa"
+  },
+  {
+    "code": "CD",
+    "alpha3": "COD",
+    "numeric": "180",
+    "name": "Democratic Republic of the Congo",
+    "capital": "Kinshasa",
+    "capitalQuestion": "What is the capital of Democratic Republic of the Congo?",
+    "region": "Africa"
+  },
+  {
+    "code": "DK",
+    "alpha3": "DNK",
+    "numeric": "208",
+    "name": "Denmark",
+    "capital": "Copenhagen",
+    "capitalQuestion": "What is the capital of Denmark?",
+    "region": "Europe"
+  },
+  {
+    "code": "DJ",
+    "alpha3": "DJI",
+    "numeric": "262",
+    "name": "Djibouti",
+    "capital": "Djibouti",
+    "capitalQuestion": "What is the capital of Djibouti?",
+    "region": "Africa"
+  },
+  {
+    "code": "DM",
+    "alpha3": "DMA",
+    "numeric": "212",
+    "name": "Dominica",
+    "capital": "Roseau",
+    "capitalQuestion": "What is the capital of Dominica?",
+    "region": "Americas"
+  },
+  {
+    "code": "DO",
+    "alpha3": "DOM",
+    "numeric": "214",
+    "name": "Dominican Republic",
+    "capital": "Santo Domingo",
+    "capitalQuestion": "What is the capital of Dominican Republic?",
+    "region": "Americas"
+  },
+  {
+    "code": "EC",
+    "alpha3": "ECU",
+    "numeric": "218",
+    "name": "Ecuador",
+    "capital": "Quito",
+    "capitalQuestion": "What is the capital of Ecuador?",
+    "region": "Americas"
+  },
+  {
+    "code": "EG",
+    "alpha3": "EGY",
+    "numeric": "818",
+    "name": "Egypt",
+    "capital": "Cairo",
+    "capitalQuestion": "What is the capital of Egypt?",
+    "region": "Africa"
+  },
+  {
+    "code": "SV",
+    "alpha3": "SLV",
+    "numeric": "222",
+    "name": "El Salvador",
+    "capital": "San Salvador",
+    "capitalQuestion": "What is the capital of El Salvador?",
+    "region": "Americas"
+  },
+  {
+    "code": "GQ",
+    "alpha3": "GNQ",
+    "numeric": "226",
+    "name": "Equatorial Guinea",
+    "capital": "Ciudad de la Paz",
+    "capitalQuestion": "What is the capital of Equatorial Guinea?",
+    "region": "Africa"
+  },
+  {
+    "code": "ER",
+    "alpha3": "ERI",
+    "numeric": "232",
+    "name": "Eritrea",
+    "capital": "Asmara",
+    "capitalQuestion": "What is the capital of Eritrea?",
+    "region": "Africa"
+  },
+  {
+    "code": "EE",
+    "alpha3": "EST",
+    "numeric": "233",
+    "name": "Estonia",
+    "capital": "Tallinn",
+    "capitalQuestion": "What is the capital of Estonia?",
+    "region": "Europe"
+  },
+  {
+    "code": "SZ",
+    "alpha3": "SWZ",
+    "numeric": "748",
+    "name": "Eswatini",
+    "capital": "Mbabane",
+    "capitalQuestion": "What is the administrative capital of Eswatini?",
+    "region": "Africa"
+  },
+  {
+    "code": "ET",
+    "alpha3": "ETH",
+    "numeric": "231",
+    "name": "Ethiopia",
+    "capital": "Addis Ababa",
+    "capitalQuestion": "What is the capital of Ethiopia?",
+    "region": "Africa"
+  },
+  {
+    "code": "FJ",
+    "alpha3": "FJI",
+    "numeric": "242",
+    "name": "Fiji",
+    "capital": "Suva",
+    "capitalQuestion": "What is the capital of Fiji?",
+    "region": "Oceania"
+  },
+  {
+    "code": "FI",
+    "alpha3": "FIN",
+    "numeric": "246",
+    "name": "Finland",
+    "capital": "Helsinki",
+    "capitalQuestion": "What is the capital of Finland?",
+    "region": "Europe"
+  },
+  {
+    "code": "FR",
+    "alpha3": "FRA",
+    "numeric": "250",
+    "name": "France",
+    "capital": "Paris",
+    "capitalQuestion": "What is the capital of France?",
+    "region": "Europe"
+  },
+  {
+    "code": "GA",
+    "alpha3": "GAB",
+    "numeric": "266",
+    "name": "Gabon",
+    "capital": "Libreville",
+    "capitalQuestion": "What is the capital of Gabon?",
+    "region": "Africa"
+  },
+  {
+    "code": "GM",
+    "alpha3": "GMB",
+    "numeric": "270",
+    "name": "Gambia",
+    "capital": "Banjul",
+    "capitalQuestion": "What is the capital of Gambia?",
+    "region": "Africa"
+  },
+  {
+    "code": "GE",
+    "alpha3": "GEO",
+    "numeric": "268",
+    "name": "Georgia",
+    "capital": "Tbilisi",
+    "capitalQuestion": "What is the capital of Georgia?",
+    "region": "Asia"
+  },
+  {
+    "code": "DE",
+    "alpha3": "DEU",
+    "numeric": "276",
+    "name": "Germany",
+    "capital": "Berlin",
+    "capitalQuestion": "What is the capital of Germany?",
+    "region": "Europe"
+  },
+  {
+    "code": "GH",
+    "alpha3": "GHA",
+    "numeric": "288",
+    "name": "Ghana",
+    "capital": "Accra",
+    "capitalQuestion": "What is the capital of Ghana?",
+    "region": "Africa"
+  },
+  {
+    "code": "GR",
+    "alpha3": "GRC",
+    "numeric": "300",
+    "name": "Greece",
+    "capital": "Athens",
+    "capitalQuestion": "What is the capital of Greece?",
+    "region": "Europe"
+  },
+  {
+    "code": "GD",
+    "alpha3": "GRD",
+    "numeric": "308",
+    "name": "Grenada",
+    "capital": "St. George's",
+    "capitalQuestion": "What is the capital of Grenada?",
+    "region": "Americas"
+  },
+  {
+    "code": "GT",
+    "alpha3": "GTM",
+    "numeric": "320",
+    "name": "Guatemala",
+    "capital": "Guatemala City",
+    "capitalQuestion": "What is the capital of Guatemala?",
+    "region": "Americas"
+  },
+  {
+    "code": "GN",
+    "alpha3": "GIN",
+    "numeric": "324",
+    "name": "Guinea",
+    "capital": "Conakry",
+    "capitalQuestion": "What is the capital of Guinea?",
+    "region": "Africa"
+  },
+  {
+    "code": "GW",
+    "alpha3": "GNB",
+    "numeric": "624",
+    "name": "Guinea-Bissau",
+    "capital": "Bissau",
+    "capitalQuestion": "What is the capital of Guinea-Bissau?",
+    "region": "Africa"
+  },
+  {
+    "code": "GY",
+    "alpha3": "GUY",
+    "numeric": "328",
+    "name": "Guyana",
+    "capital": "Georgetown",
+    "capitalQuestion": "What is the capital of Guyana?",
+    "region": "Americas"
+  },
+  {
+    "code": "HT",
+    "alpha3": "HTI",
+    "numeric": "332",
+    "name": "Haiti",
+    "capital": "Port-au-Prince",
+    "capitalQuestion": "What is the capital of Haiti?",
+    "region": "Americas"
+  },
+  {
+    "code": "HN",
+    "alpha3": "HND",
+    "numeric": "340",
+    "name": "Honduras",
+    "capital": "Tegucigalpa",
+    "capitalQuestion": "What is the capital of Honduras?",
+    "region": "Americas"
+  },
+  {
+    "code": "HU",
+    "alpha3": "HUN",
+    "numeric": "348",
+    "name": "Hungary",
+    "capital": "Budapest",
+    "capitalQuestion": "What is the capital of Hungary?",
+    "region": "Europe"
+  },
+  {
+    "code": "IS",
+    "alpha3": "ISL",
+    "numeric": "352",
+    "name": "Iceland",
+    "capital": "Reykjavik",
+    "capitalQuestion": "What is the capital of Iceland?",
+    "region": "Europe"
+  },
+  {
+    "code": "IN",
+    "alpha3": "IND",
+    "numeric": "356",
+    "name": "India",
+    "capital": "New Delhi",
+    "capitalQuestion": "What is the capital of India?",
+    "region": "Asia"
+  },
+  {
+    "code": "ID",
+    "alpha3": "IDN",
+    "numeric": "360",
+    "name": "Indonesia",
+    "capital": "Jakarta",
+    "capitalQuestion": "What is the capital of Indonesia?",
+    "region": "Asia"
+  },
+  {
+    "code": "IR",
+    "alpha3": "IRN",
+    "numeric": "364",
+    "name": "Iran",
+    "capital": "Tehran",
+    "capitalQuestion": "What is the capital of Iran?",
+    "region": "Asia"
+  },
+  {
+    "code": "IQ",
+    "alpha3": "IRQ",
+    "numeric": "368",
+    "name": "Iraq",
+    "capital": "Baghdad",
+    "capitalQuestion": "What is the capital of Iraq?",
+    "region": "Asia"
+  },
+  {
+    "code": "IE",
+    "alpha3": "IRL",
+    "numeric": "372",
+    "name": "Ireland",
+    "capital": "Dublin",
+    "capitalQuestion": "What is the capital of Ireland?",
+    "region": "Europe"
+  },
+  {
+    "code": "IL",
+    "alpha3": "ISR",
+    "numeric": "376",
+    "name": "Israel",
+    "capital": "Jerusalem",
+    "capitalQuestion": "What is the capital of Israel?",
+    "region": "Asia"
+  },
+  {
+    "code": "IT",
+    "alpha3": "ITA",
+    "numeric": "380",
+    "name": "Italy",
+    "capital": "Rome",
+    "capitalQuestion": "What is the capital of Italy?",
+    "region": "Europe"
+  },
+  {
+    "code": "JM",
+    "alpha3": "JAM",
+    "numeric": "388",
+    "name": "Jamaica",
+    "capital": "Kingston",
+    "capitalQuestion": "What is the capital of Jamaica?",
+    "region": "Americas"
+  },
+  {
+    "code": "JP",
+    "alpha3": "JPN",
+    "numeric": "392",
+    "name": "Japan",
+    "capital": "Tokyo",
+    "capitalQuestion": "What is the capital of Japan?",
+    "region": "Asia"
+  },
+  {
+    "code": "JO",
+    "alpha3": "JOR",
+    "numeric": "400",
+    "name": "Jordan",
+    "capital": "Amman",
+    "capitalQuestion": "What is the capital of Jordan?",
+    "region": "Asia"
+  },
+  {
+    "code": "KZ",
+    "alpha3": "KAZ",
+    "numeric": "398",
+    "name": "Kazakhstan",
+    "capital": "Astana",
+    "capitalQuestion": "What is the capital of Kazakhstan?",
+    "region": "Asia"
+  },
+  {
+    "code": "KE",
+    "alpha3": "KEN",
+    "numeric": "404",
+    "name": "Kenya",
+    "capital": "Nairobi",
+    "capitalQuestion": "What is the capital of Kenya?",
+    "region": "Africa"
+  },
+  {
+    "code": "KI",
+    "alpha3": "KIR",
+    "numeric": "296",
+    "name": "Kiribati",
+    "capital": "South Tarawa",
+    "capitalQuestion": "What is the capital of Kiribati?",
+    "region": "Oceania"
+  },
+  {
+    "code": "XK",
+    "alpha3": "XKX",
+    "numeric": "XKX",
+    "name": "Kosovo",
+    "capital": "Pristina",
+    "capitalQuestion": "What is the capital of Kosovo?",
+    "region": "Europe"
+  },
+  {
+    "code": "KW",
+    "alpha3": "KWT",
+    "numeric": "414",
+    "name": "Kuwait",
+    "capital": "Kuwait City",
+    "capitalQuestion": "What is the capital of Kuwait?",
+    "region": "Asia"
+  },
+  {
+    "code": "KG",
+    "alpha3": "KGZ",
+    "numeric": "417",
+    "name": "Kyrgyzstan",
+    "capital": "Bishkek",
+    "capitalQuestion": "What is the capital of Kyrgyzstan?",
+    "region": "Asia"
+  },
+  {
+    "code": "LA",
+    "alpha3": "LAO",
+    "numeric": "418",
+    "name": "Laos",
+    "capital": "Vientiane",
+    "capitalQuestion": "What is the capital of Laos?",
+    "region": "Asia"
+  },
+  {
+    "code": "LV",
+    "alpha3": "LVA",
+    "numeric": "428",
+    "name": "Latvia",
+    "capital": "Riga",
+    "capitalQuestion": "What is the capital of Latvia?",
+    "region": "Europe"
+  },
+  {
+    "code": "LB",
+    "alpha3": "LBN",
+    "numeric": "422",
+    "name": "Lebanon",
+    "capital": "Beirut",
+    "capitalQuestion": "What is the capital of Lebanon?",
+    "region": "Asia"
+  },
+  {
+    "code": "LS",
+    "alpha3": "LSO",
+    "numeric": "426",
+    "name": "Lesotho",
+    "capital": "Maseru",
+    "capitalQuestion": "What is the capital of Lesotho?",
+    "region": "Africa"
+  },
+  {
+    "code": "LR",
+    "alpha3": "LBR",
+    "numeric": "430",
+    "name": "Liberia",
+    "capital": "Monrovia",
+    "capitalQuestion": "What is the capital of Liberia?",
+    "region": "Africa"
+  },
+  {
+    "code": "LY",
+    "alpha3": "LBY",
+    "numeric": "434",
+    "name": "Libya",
+    "capital": "Tripoli",
+    "capitalQuestion": "What is the capital of Libya?",
+    "region": "Africa"
+  },
+  {
+    "code": "LI",
+    "alpha3": "LIE",
+    "numeric": "438",
+    "name": "Liechtenstein",
+    "capital": "Vaduz",
+    "capitalQuestion": "What is the capital of Liechtenstein?",
+    "region": "Europe"
+  },
+  {
+    "code": "LT",
+    "alpha3": "LTU",
+    "numeric": "440",
+    "name": "Lithuania",
+    "capital": "Vilnius",
+    "capitalQuestion": "What is the capital of Lithuania?",
+    "region": "Europe"
+  },
+  {
+    "code": "LU",
+    "alpha3": "LUX",
+    "numeric": "442",
+    "name": "Luxembourg",
+    "capital": "Luxembourg",
+    "capitalQuestion": "What is the capital of Luxembourg?",
+    "region": "Europe"
+  },
+  {
+    "code": "MG",
+    "alpha3": "MDG",
+    "numeric": "450",
+    "name": "Madagascar",
+    "capital": "Antananarivo",
+    "capitalQuestion": "What is the capital of Madagascar?",
+    "region": "Africa"
+  },
+  {
+    "code": "MW",
+    "alpha3": "MWI",
+    "numeric": "454",
+    "name": "Malawi",
+    "capital": "Lilongwe",
+    "capitalQuestion": "What is the capital of Malawi?",
+    "region": "Africa"
+  },
+  {
+    "code": "MY",
+    "alpha3": "MYS",
+    "numeric": "458",
+    "name": "Malaysia",
+    "capital": "Kuala Lumpur",
+    "capitalQuestion": "What is the official capital of Malaysia?",
+    "region": "Asia"
+  },
+  {
+    "code": "MV",
+    "alpha3": "MDV",
+    "numeric": "462",
+    "name": "Maldives",
+    "capital": "Male",
+    "capitalQuestion": "What is the capital of Maldives?",
+    "region": "Asia"
+  },
+  {
+    "code": "ML",
+    "alpha3": "MLI",
+    "numeric": "466",
+    "name": "Mali",
+    "capital": "Bamako",
+    "capitalQuestion": "What is the capital of Mali?",
+    "region": "Africa"
+  },
+  {
+    "code": "MT",
+    "alpha3": "MLT",
+    "numeric": "470",
+    "name": "Malta",
+    "capital": "Valletta",
+    "capitalQuestion": "What is the capital of Malta?",
+    "region": "Europe"
+  },
+  {
+    "code": "MH",
+    "alpha3": "MHL",
+    "numeric": "584",
+    "name": "Marshall Islands",
+    "capital": "Majuro",
+    "capitalQuestion": "What is the capital of Marshall Islands?",
+    "region": "Oceania"
+  },
+  {
+    "code": "MR",
+    "alpha3": "MRT",
+    "numeric": "478",
+    "name": "Mauritania",
+    "capital": "Nouakchott",
+    "capitalQuestion": "What is the capital of Mauritania?",
+    "region": "Africa"
+  },
+  {
+    "code": "MU",
+    "alpha3": "MUS",
+    "numeric": "480",
+    "name": "Mauritius",
+    "capital": "Port Louis",
+    "capitalQuestion": "What is the capital of Mauritius?",
+    "region": "Africa"
+  },
+  {
+    "code": "MX",
+    "alpha3": "MEX",
+    "numeric": "484",
+    "name": "Mexico",
+    "capital": "Mexico City",
+    "capitalQuestion": "What is the capital of Mexico?",
+    "region": "Americas"
+  },
+  {
+    "code": "FM",
+    "alpha3": "FSM",
+    "numeric": "583",
+    "name": "Micronesia",
+    "capital": "Palikir",
+    "capitalQuestion": "What is the capital of Micronesia?",
+    "region": "Oceania"
+  },
+  {
+    "code": "MD",
+    "alpha3": "MDA",
+    "numeric": "498",
+    "name": "Moldova",
+    "capital": "Chisinau",
+    "capitalQuestion": "What is the capital of Moldova?",
+    "region": "Europe"
+  },
+  {
+    "code": "MC",
+    "alpha3": "MCO",
+    "numeric": "492",
+    "name": "Monaco",
+    "capital": "Monaco",
+    "capitalQuestion": "What is the capital of Monaco?",
+    "region": "Europe"
+  },
+  {
+    "code": "MN",
+    "alpha3": "MNG",
+    "numeric": "496",
+    "name": "Mongolia",
+    "capital": "Ulaanbaatar",
+    "capitalQuestion": "What is the capital of Mongolia?",
+    "region": "Asia"
+  },
+  {
+    "code": "ME",
+    "alpha3": "MNE",
+    "numeric": "499",
+    "name": "Montenegro",
+    "capital": "Podgorica",
+    "capitalQuestion": "What is the capital of Montenegro?",
+    "region": "Europe"
+  },
+  {
+    "code": "MA",
+    "alpha3": "MAR",
+    "numeric": "504",
+    "name": "Morocco",
+    "capital": "Rabat",
+    "capitalQuestion": "What is the capital of Morocco?",
+    "region": "Africa"
   },
   {
     "code": "MZ",
@@ -874,9 +1058,745 @@
     "numeric": "508",
     "name": "Mozambique",
     "capital": "Maputo",
-    "region": "Africa",
-    "shapeEligible": true,
-    "flagEligible": true,
-    "capitalEligible": true
+    "capitalQuestion": "What is the capital of Mozambique?",
+    "region": "Africa"
+  },
+  {
+    "code": "MM",
+    "alpha3": "MMR",
+    "numeric": "104",
+    "name": "Myanmar",
+    "capital": "Nay Pyi Taw",
+    "capitalQuestion": "What is the capital of Myanmar?",
+    "region": "Asia"
+  },
+  {
+    "code": "NA",
+    "alpha3": "NAM",
+    "numeric": "516",
+    "name": "Namibia",
+    "capital": "Windhoek",
+    "capitalQuestion": "What is the capital of Namibia?",
+    "region": "Africa"
+  },
+  {
+    "code": "NR",
+    "alpha3": "NRU",
+    "numeric": "520",
+    "name": "Nauru",
+    "capital": "Yaren",
+    "capitalQuestion": "Which district is the seat of government of Nauru?",
+    "region": "Oceania"
+  },
+  {
+    "code": "NP",
+    "alpha3": "NPL",
+    "numeric": "524",
+    "name": "Nepal",
+    "capital": "Kathmandu",
+    "capitalQuestion": "What is the capital of Nepal?",
+    "region": "Asia"
+  },
+  {
+    "code": "NL",
+    "alpha3": "NLD",
+    "numeric": "528",
+    "name": "Netherlands",
+    "capital": "Amsterdam",
+    "capitalQuestion": "What is the constitutional capital of the Netherlands?",
+    "region": "Europe"
+  },
+  {
+    "code": "NZ",
+    "alpha3": "NZL",
+    "numeric": "554",
+    "name": "New Zealand",
+    "capital": "Wellington",
+    "capitalQuestion": "What is the capital of New Zealand?",
+    "region": "Oceania"
+  },
+  {
+    "code": "NI",
+    "alpha3": "NIC",
+    "numeric": "558",
+    "name": "Nicaragua",
+    "capital": "Managua",
+    "capitalQuestion": "What is the capital of Nicaragua?",
+    "region": "Americas"
+  },
+  {
+    "code": "NE",
+    "alpha3": "NER",
+    "numeric": "562",
+    "name": "Niger",
+    "capital": "Niamey",
+    "capitalQuestion": "What is the capital of Niger?",
+    "region": "Africa"
+  },
+  {
+    "code": "NG",
+    "alpha3": "NGA",
+    "numeric": "566",
+    "name": "Nigeria",
+    "capital": "Abuja",
+    "capitalQuestion": "What is the capital of Nigeria?",
+    "region": "Africa"
+  },
+  {
+    "code": "NU",
+    "alpha3": "NIU",
+    "numeric": "570",
+    "name": "Niue",
+    "capital": "Alofi",
+    "capitalQuestion": "What is the capital of Niue?",
+    "region": "Oceania"
+  },
+  {
+    "code": "KP",
+    "alpha3": "PRK",
+    "numeric": "408",
+    "name": "North Korea",
+    "capital": "Pyongyang",
+    "capitalQuestion": "What is the capital of North Korea?",
+    "region": "Asia"
+  },
+  {
+    "code": "MK",
+    "alpha3": "MKD",
+    "numeric": "807",
+    "name": "North Macedonia",
+    "capital": "Skopje",
+    "capitalQuestion": "What is the capital of North Macedonia?",
+    "region": "Europe"
+  },
+  {
+    "code": "NO",
+    "alpha3": "NOR",
+    "numeric": "578",
+    "name": "Norway",
+    "capital": "Oslo",
+    "capitalQuestion": "What is the capital of Norway?",
+    "region": "Europe"
+  },
+  {
+    "code": "OM",
+    "alpha3": "OMN",
+    "numeric": "512",
+    "name": "Oman",
+    "capital": "Muscat",
+    "capitalQuestion": "What is the capital of Oman?",
+    "region": "Asia"
+  },
+  {
+    "code": "PK",
+    "alpha3": "PAK",
+    "numeric": "586",
+    "name": "Pakistan",
+    "capital": "Islamabad",
+    "capitalQuestion": "What is the capital of Pakistan?",
+    "region": "Asia"
+  },
+  {
+    "code": "PW",
+    "alpha3": "PLW",
+    "numeric": "585",
+    "name": "Palau",
+    "capital": "Ngerulmud",
+    "capitalQuestion": "What is the capital of Palau?",
+    "region": "Oceania"
+  },
+  {
+    "code": "PS",
+    "alpha3": "PSE",
+    "numeric": "275",
+    "name": "Palestine",
+    "capital": "East Jerusalem",
+    "capitalQuestion": "What is the declared capital of Palestine?",
+    "region": "Asia"
+  },
+  {
+    "code": "PA",
+    "alpha3": "PAN",
+    "numeric": "591",
+    "name": "Panama",
+    "capital": "Panama City",
+    "capitalQuestion": "What is the capital of Panama?",
+    "region": "Americas"
+  },
+  {
+    "code": "PG",
+    "alpha3": "PNG",
+    "numeric": "598",
+    "name": "Papua New Guinea",
+    "capital": "Port Moresby",
+    "capitalQuestion": "What is the capital of Papua New Guinea?",
+    "region": "Oceania"
+  },
+  {
+    "code": "PY",
+    "alpha3": "PRY",
+    "numeric": "600",
+    "name": "Paraguay",
+    "capital": "Asuncion",
+    "capitalQuestion": "What is the capital of Paraguay?",
+    "region": "Americas"
+  },
+  {
+    "code": "PE",
+    "alpha3": "PER",
+    "numeric": "604",
+    "name": "Peru",
+    "capital": "Lima",
+    "capitalQuestion": "What is the capital of Peru?",
+    "region": "Americas"
+  },
+  {
+    "code": "PH",
+    "alpha3": "PHL",
+    "numeric": "608",
+    "name": "Philippines",
+    "capital": "Manila",
+    "capitalQuestion": "What is the capital of Philippines?",
+    "region": "Asia"
+  },
+  {
+    "code": "PL",
+    "alpha3": "POL",
+    "numeric": "616",
+    "name": "Poland",
+    "capital": "Warsaw",
+    "capitalQuestion": "What is the capital of Poland?",
+    "region": "Europe"
+  },
+  {
+    "code": "PT",
+    "alpha3": "PRT",
+    "numeric": "620",
+    "name": "Portugal",
+    "capital": "Lisbon",
+    "capitalQuestion": "What is the capital of Portugal?",
+    "region": "Europe"
+  },
+  {
+    "code": "QA",
+    "alpha3": "QAT",
+    "numeric": "634",
+    "name": "Qatar",
+    "capital": "Doha",
+    "capitalQuestion": "What is the capital of Qatar?",
+    "region": "Asia"
+  },
+  {
+    "code": "CG",
+    "alpha3": "COG",
+    "numeric": "178",
+    "name": "Republic of the Congo",
+    "capital": "Brazzaville",
+    "capitalQuestion": "What is the capital of Republic of the Congo?",
+    "region": "Africa"
+  },
+  {
+    "code": "RO",
+    "alpha3": "ROU",
+    "numeric": "642",
+    "name": "Romania",
+    "capital": "Bucharest",
+    "capitalQuestion": "What is the capital of Romania?",
+    "region": "Europe"
+  },
+  {
+    "code": "RU",
+    "alpha3": "RUS",
+    "numeric": "643",
+    "name": "Russia",
+    "capital": "Moscow",
+    "capitalQuestion": "What is the capital of Russia?",
+    "region": "Europe"
+  },
+  {
+    "code": "RW",
+    "alpha3": "RWA",
+    "numeric": "646",
+    "name": "Rwanda",
+    "capital": "Kigali",
+    "capitalQuestion": "What is the capital of Rwanda?",
+    "region": "Africa"
+  },
+  {
+    "code": "KN",
+    "alpha3": "KNA",
+    "numeric": "659",
+    "name": "Saint Kitts and Nevis",
+    "capital": "Basseterre",
+    "capitalQuestion": "What is the capital of Saint Kitts and Nevis?",
+    "region": "Americas"
+  },
+  {
+    "code": "LC",
+    "alpha3": "LCA",
+    "numeric": "662",
+    "name": "Saint Lucia",
+    "capital": "Castries",
+    "capitalQuestion": "What is the capital of Saint Lucia?",
+    "region": "Americas"
+  },
+  {
+    "code": "VC",
+    "alpha3": "VCT",
+    "numeric": "670",
+    "name": "Saint Vincent and the Grenadines",
+    "capital": "Kingstown",
+    "capitalQuestion": "What is the capital of Saint Vincent and the Grenadines?",
+    "region": "Americas"
+  },
+  {
+    "code": "WS",
+    "alpha3": "WSM",
+    "numeric": "882",
+    "name": "Samoa",
+    "capital": "Apia",
+    "capitalQuestion": "What is the capital of Samoa?",
+    "region": "Oceania"
+  },
+  {
+    "code": "SM",
+    "alpha3": "SMR",
+    "numeric": "674",
+    "name": "San Marino",
+    "capital": "San Marino",
+    "capitalQuestion": "What is the capital of San Marino?",
+    "region": "Europe"
+  },
+  {
+    "code": "SA",
+    "alpha3": "SAU",
+    "numeric": "682",
+    "name": "Saudi Arabia",
+    "capital": "Riyadh",
+    "capitalQuestion": "What is the capital of Saudi Arabia?",
+    "region": "Asia"
+  },
+  {
+    "code": "SN",
+    "alpha3": "SEN",
+    "numeric": "686",
+    "name": "Senegal",
+    "capital": "Dakar",
+    "capitalQuestion": "What is the capital of Senegal?",
+    "region": "Africa"
+  },
+  {
+    "code": "RS",
+    "alpha3": "SRB",
+    "numeric": "688",
+    "name": "Serbia",
+    "capital": "Belgrade",
+    "capitalQuestion": "What is the capital of Serbia?",
+    "region": "Europe"
+  },
+  {
+    "code": "SC",
+    "alpha3": "SYC",
+    "numeric": "690",
+    "name": "Seychelles",
+    "capital": "Victoria",
+    "capitalQuestion": "What is the capital of Seychelles?",
+    "region": "Africa"
+  },
+  {
+    "code": "SL",
+    "alpha3": "SLE",
+    "numeric": "694",
+    "name": "Sierra Leone",
+    "capital": "Freetown",
+    "capitalQuestion": "What is the capital of Sierra Leone?",
+    "region": "Africa"
+  },
+  {
+    "code": "SG",
+    "alpha3": "SGP",
+    "numeric": "702",
+    "name": "Singapore",
+    "capital": "Singapore",
+    "capitalQuestion": "What is the capital of Singapore?",
+    "region": "Asia"
+  },
+  {
+    "code": "SK",
+    "alpha3": "SVK",
+    "numeric": "703",
+    "name": "Slovakia",
+    "capital": "Bratislava",
+    "capitalQuestion": "What is the capital of Slovakia?",
+    "region": "Europe"
+  },
+  {
+    "code": "SI",
+    "alpha3": "SVN",
+    "numeric": "705",
+    "name": "Slovenia",
+    "capital": "Ljubljana",
+    "capitalQuestion": "What is the capital of Slovenia?",
+    "region": "Europe"
+  },
+  {
+    "code": "SB",
+    "alpha3": "SLB",
+    "numeric": "090",
+    "name": "Solomon Islands",
+    "capital": "Honiara",
+    "capitalQuestion": "What is the capital of Solomon Islands?",
+    "region": "Oceania"
+  },
+  {
+    "code": "SO",
+    "alpha3": "SOM",
+    "numeric": "706",
+    "name": "Somalia",
+    "capital": "Mogadishu",
+    "capitalQuestion": "What is the capital of Somalia?",
+    "region": "Africa"
+  },
+  {
+    "code": "ZA",
+    "alpha3": "ZAF",
+    "numeric": "710",
+    "name": "South Africa",
+    "capital": "Pretoria",
+    "capitalQuestion": "What is the administrative capital of South Africa?",
+    "region": "Africa"
+  },
+  {
+    "code": "KR",
+    "alpha3": "KOR",
+    "numeric": "410",
+    "name": "South Korea",
+    "capital": "Seoul",
+    "capitalQuestion": "What is the capital of South Korea?",
+    "region": "Asia"
+  },
+  {
+    "code": "SS",
+    "alpha3": "SSD",
+    "numeric": "728",
+    "name": "South Sudan",
+    "capital": "Juba",
+    "capitalQuestion": "What is the capital of South Sudan?",
+    "region": "Africa"
+  },
+  {
+    "code": "ES",
+    "alpha3": "ESP",
+    "numeric": "724",
+    "name": "Spain",
+    "capital": "Madrid",
+    "capitalQuestion": "What is the capital of Spain?",
+    "region": "Europe"
+  },
+  {
+    "code": "LK",
+    "alpha3": "LKA",
+    "numeric": "144",
+    "name": "Sri Lanka",
+    "capital": "Sri Jayewardenepura Kotte",
+    "capitalQuestion": "What is the legislative capital of Sri Lanka?",
+    "region": "Asia"
+  },
+  {
+    "code": "SD",
+    "alpha3": "SDN",
+    "numeric": "729",
+    "name": "Sudan",
+    "capital": "Khartoum",
+    "capitalQuestion": "What is the capital of Sudan?",
+    "region": "Africa"
+  },
+  {
+    "code": "SR",
+    "alpha3": "SUR",
+    "numeric": "740",
+    "name": "Suriname",
+    "capital": "Paramaribo",
+    "capitalQuestion": "What is the capital of Suriname?",
+    "region": "Americas"
+  },
+  {
+    "code": "SE",
+    "alpha3": "SWE",
+    "numeric": "752",
+    "name": "Sweden",
+    "capital": "Stockholm",
+    "capitalQuestion": "What is the capital of Sweden?",
+    "region": "Europe"
+  },
+  {
+    "code": "CH",
+    "alpha3": "CHE",
+    "numeric": "756",
+    "name": "Switzerland",
+    "capital": "Bern",
+    "capitalQuestion": "Which city serves as the federal city of Switzerland?",
+    "region": "Europe"
+  },
+  {
+    "code": "SY",
+    "alpha3": "SYR",
+    "numeric": "760",
+    "name": "Syria",
+    "capital": "Damascus",
+    "capitalQuestion": "What is the capital of Syria?",
+    "region": "Asia"
+  },
+  {
+    "code": "ST",
+    "alpha3": "STP",
+    "numeric": "678",
+    "name": "São Tomé and Príncipe",
+    "capital": "Sao Tome",
+    "capitalQuestion": "What is the capital of São Tomé and Príncipe?",
+    "region": "Africa"
+  },
+  {
+    "code": "TW",
+    "alpha3": "TWN",
+    "numeric": "158",
+    "name": "Taiwan",
+    "capital": "Taipei",
+    "capitalQuestion": "What is the capital of Taiwan?",
+    "region": "Asia"
+  },
+  {
+    "code": "TJ",
+    "alpha3": "TJK",
+    "numeric": "762",
+    "name": "Tajikistan",
+    "capital": "Dushanbe",
+    "capitalQuestion": "What is the capital of Tajikistan?",
+    "region": "Asia"
+  },
+  {
+    "code": "TZ",
+    "alpha3": "TZA",
+    "numeric": "834",
+    "name": "Tanzania",
+    "capital": "Dodoma",
+    "capitalQuestion": "What is the capital of Tanzania?",
+    "region": "Africa"
+  },
+  {
+    "code": "TH",
+    "alpha3": "THA",
+    "numeric": "764",
+    "name": "Thailand",
+    "capital": "Bangkok",
+    "capitalQuestion": "What is the capital of Thailand?",
+    "region": "Asia"
+  },
+  {
+    "code": "TL",
+    "alpha3": "TLS",
+    "numeric": "626",
+    "name": "Timor-Leste",
+    "capital": "Dili",
+    "capitalQuestion": "What is the capital of Timor-Leste?",
+    "region": "Asia"
+  },
+  {
+    "code": "TG",
+    "alpha3": "TGO",
+    "numeric": "768",
+    "name": "Togo",
+    "capital": "Lome",
+    "capitalQuestion": "What is the capital of Togo?",
+    "region": "Africa"
+  },
+  {
+    "code": "TO",
+    "alpha3": "TON",
+    "numeric": "776",
+    "name": "Tonga",
+    "capital": "Nuku'alofa",
+    "capitalQuestion": "What is the capital of Tonga?",
+    "region": "Oceania"
+  },
+  {
+    "code": "TT",
+    "alpha3": "TTO",
+    "numeric": "780",
+    "name": "Trinidad and Tobago",
+    "capital": "Port of Spain",
+    "capitalQuestion": "What is the capital of Trinidad and Tobago?",
+    "region": "Americas"
+  },
+  {
+    "code": "TN",
+    "alpha3": "TUN",
+    "numeric": "788",
+    "name": "Tunisia",
+    "capital": "Tunis",
+    "capitalQuestion": "What is the capital of Tunisia?",
+    "region": "Africa"
+  },
+  {
+    "code": "TM",
+    "alpha3": "TKM",
+    "numeric": "795",
+    "name": "Turkmenistan",
+    "capital": "Ashgabat",
+    "capitalQuestion": "What is the capital of Turkmenistan?",
+    "region": "Asia"
+  },
+  {
+    "code": "TV",
+    "alpha3": "TUV",
+    "numeric": "798",
+    "name": "Tuvalu",
+    "capital": "Funafuti",
+    "capitalQuestion": "What is the capital of Tuvalu?",
+    "region": "Oceania"
+  },
+  {
+    "code": "TR",
+    "alpha3": "TUR",
+    "numeric": "792",
+    "name": "Türkiye",
+    "capital": "Ankara",
+    "capitalQuestion": "What is the capital of Türkiye?",
+    "region": "Asia"
+  },
+  {
+    "code": "UG",
+    "alpha3": "UGA",
+    "numeric": "800",
+    "name": "Uganda",
+    "capital": "Kampala",
+    "capitalQuestion": "What is the capital of Uganda?",
+    "region": "Africa"
+  },
+  {
+    "code": "UA",
+    "alpha3": "UKR",
+    "numeric": "804",
+    "name": "Ukraine",
+    "capital": "Kyiv",
+    "capitalQuestion": "What is the capital of Ukraine?",
+    "region": "Europe"
+  },
+  {
+    "code": "AE",
+    "alpha3": "ARE",
+    "numeric": "784",
+    "name": "United Arab Emirates",
+    "capital": "Abu Dhabi",
+    "capitalQuestion": "What is the capital of United Arab Emirates?",
+    "region": "Asia"
+  },
+  {
+    "code": "GB",
+    "alpha3": "GBR",
+    "numeric": "826",
+    "name": "United Kingdom",
+    "capital": "London",
+    "capitalQuestion": "What is the capital of United Kingdom?",
+    "region": "Europe"
+  },
+  {
+    "code": "US",
+    "alpha3": "USA",
+    "numeric": "840",
+    "name": "United States",
+    "capital": "Washington, D.C.",
+    "capitalQuestion": "What is the capital of United States?",
+    "region": "Americas"
+  },
+  {
+    "code": "UY",
+    "alpha3": "URY",
+    "numeric": "858",
+    "name": "Uruguay",
+    "capital": "Montevideo",
+    "capitalQuestion": "What is the capital of Uruguay?",
+    "region": "Americas"
+  },
+  {
+    "code": "UZ",
+    "alpha3": "UZB",
+    "numeric": "860",
+    "name": "Uzbekistan",
+    "capital": "Tashkent",
+    "capitalQuestion": "What is the capital of Uzbekistan?",
+    "region": "Asia"
+  },
+  {
+    "code": "VU",
+    "alpha3": "VUT",
+    "numeric": "548",
+    "name": "Vanuatu",
+    "capital": "Port Vila",
+    "capitalQuestion": "What is the capital of Vanuatu?",
+    "region": "Oceania"
+  },
+  {
+    "code": "VA",
+    "alpha3": "VAT",
+    "numeric": "336",
+    "name": "Vatican City",
+    "capital": "Vatican City",
+    "capitalQuestion": "What is the capital of Vatican City?",
+    "region": "Europe"
+  },
+  {
+    "code": "VE",
+    "alpha3": "VEN",
+    "numeric": "862",
+    "name": "Venezuela",
+    "capital": "Caracas",
+    "capitalQuestion": "What is the capital of Venezuela?",
+    "region": "Americas"
+  },
+  {
+    "code": "VN",
+    "alpha3": "VNM",
+    "numeric": "704",
+    "name": "Vietnam",
+    "capital": "Hanoi",
+    "capitalQuestion": "What is the capital of Vietnam?",
+    "region": "Asia"
+  },
+  {
+    "code": "EH",
+    "alpha3": "ESH",
+    "numeric": "732",
+    "name": "Western Sahara",
+    "capital": "Laayoune",
+    "capitalQuestion": "What is the claimed capital of Western Sahara?",
+    "region": "Africa"
+  },
+  {
+    "code": "YE",
+    "alpha3": "YEM",
+    "numeric": "887",
+    "name": "Yemen",
+    "capital": "Sanaa",
+    "capitalQuestion": "What is the capital of Yemen?",
+    "region": "Asia"
+  },
+  {
+    "code": "ZM",
+    "alpha3": "ZMB",
+    "numeric": "894",
+    "name": "Zambia",
+    "capital": "Lusaka",
+    "capitalQuestion": "What is the capital of Zambia?",
+    "region": "Africa"
+  },
+  {
+    "code": "ZW",
+    "alpha3": "ZWE",
+    "numeric": "716",
+    "name": "Zimbabwe",
+    "capital": "Harare",
+    "capitalQuestion": "What is the capital of Zimbabwe?",
+    "region": "Africa"
   }
 ]

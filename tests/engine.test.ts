@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { GameEngine, statistics, winner, type Answer } from '../backend/engine';
 import { generateQuestions } from '../backend/questions';
 import assets from '../data/assets.json';
+import countries from '../data/countries.json';
 import {
   FEEDBACK_MS,
   GRACE_MS,
@@ -162,7 +163,12 @@ test('question sets have four phases with ten distinct countries and valid optio
     }
     assert.ok(phases[0].every((q) => q.visual?.startsWith('data:image/svg+xml;base64,')));
     assert.ok(phases[1].every((q) => q.visual?.startsWith('data:image/svg+xml;base64,')));
-    assert.ok(phases[2].every((q) => q.prompt.startsWith('What is the capital') && !q.visual));
+    assert.ok(
+      phases[2].every(
+        (q) =>
+          q.prompt === countries.find((c) => c.code === q.country)!.capitalQuestion && !q.visual,
+      ),
+    );
   }
 });
 test('both players see identical question, visual, options, and deadline without an answer key', () => {

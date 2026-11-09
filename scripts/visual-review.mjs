@@ -7,8 +7,7 @@ await page.screenshot({ path: 'artifacts/welcome-desktop.png', fullPage: true })
 const countries = JSON.parse(readFileSync('data/countries.json', 'utf8'));
 const assets = JSON.parse(readFileSync('data/assets.json', 'utf8'));
 await page.setContent(
-  `<html><body style="margin:20px;background:#f7f7ef;font:14px Arial"><h1>Country silhouette review — all eligible countries</h1><div style="display:grid;grid-template-columns:repeat(8,1fr);gap:12px">${countries
-    .filter((c) => c.shapeEligible)
+  `<html><body style="margin:20px;background:#f7f7ef;font:14px Arial"><h1>Country silhouette review — all countries</h1><div style="display:grid;grid-template-columns:repeat(8,1fr);gap:12px">${countries
     .map(
       (c) =>
         `<div style="text-align:center;border:1px solid #ddd;padding:5px">${assets[c.code].shape}<p>${c.name}</p></div>`,
