@@ -13,7 +13,6 @@ COPY package.json package-lock.json ./
 RUN npm ci --omit=dev --no-audit --no-fund && npm cache clean --force
 COPY --from=build --chown=node:node /app/dist ./dist
 COPY --chown=node:node licenses ./licenses
-COPY --chown=node:node THIRD_PARTY_LICENSES.md ./THIRD_PARTY_LICENSES.md
 USER node
 EXPOSE 3039
 HEALTHCHECK --interval=20s --timeout=3s --start-period=10s --retries=3 CMD node -e "fetch('http://127.0.0.1:3039/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"
